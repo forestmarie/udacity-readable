@@ -1,5 +1,6 @@
-.App {
-  text-align: center;
+.App-container {
+  text-align: left;
+  padding: 15px;
 } 
 
 .App-header {
