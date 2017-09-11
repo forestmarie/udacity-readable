@@ -1,3 +1,13 @@
+export const ADD_POST = "ADD_POST";
+export const LIKE_POST = "LIKE_POST";
+export const EDIT_POST = "EDIT_POST";
+export const FETCH_POSTS = "FETCH_POSTS";
+
+export const ADD_COMMENT = "ADD_COMMENT";
+export const LIKE_COMMENT = "LIKE_COMMENT";
+export const EDIT_COMMENT = "EDIT_COMMENT";
+export const FETCH_COMMENTS = "FETCH_COMMENTS";
+
 export function addPost({ author, title, body }) {
     return {
         type: ADD_POST,
@@ -21,6 +31,13 @@ export function editPost({ author, title, body, postId }) {
         title,
         body, 
         postId
+    };
+}
+
+export function fetchPosts({ category }) {
+    return {
+        type: FETCH_POSTS,
+        category 
     };
 }
 
@@ -49,9 +66,9 @@ export function editComment({ author, body, commentId }) {
     };
 }
 
-export function fetchPosts({ category }) {
+export function fetchComments({ postId }) {
     return {
-        type: FETCH_POSTS,
-        category 
+        type: FETCH_COMMENTS,
+        postId 
     };
 }
