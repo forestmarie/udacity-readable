@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 class PostsContainer extends Component { 
     render() {
@@ -32,28 +33,14 @@ class PostsContainer extends Component {
                   <i className="thumbs up icon">485</i>
                 </div>
               </div>
-              <div className="ui fluid card">
-                <div className="content">
-                  <div className="header">Drew Brees Shreds Houston Defense</div>
-                  <div className="meta">by John Doe, August 8th 2017, 9:53 AM</div>
-                </div>
-                <div className="extra content">
-                  <i className="thumbs up icon">2038</i>
-                </div>
-              </div>
-              <div className="ui fluid card">
-                <div className="content">
-                  <div className="header">Karem Hunt Goes Nuts in First NFL Start</div>
-                  <div className="meta">by John Doe, August 8th 2017, 9:53 AM</div>
-                </div>
-                <div className="extra content">
-                  <i className="thumbs up icon">4</i>
-                </div>
-              </div>
             </div>
         </div>
       );
     }
   }
 
-  export default PostsContainer;
+  function mapStateToProps({ /*props you leverage*/ }) {
+    return [];
+  }
+  
+  export default connect(mapStateToProps)(PostsContainer);

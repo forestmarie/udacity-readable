@@ -8,24 +8,24 @@ import {
     LIKE_COMMENT,  
     EDIT_COMMENT, 
     FETCH_COMMENTS } from "../actions";
-    
+
 const comments = (state = [], action) => {
+  const { author, body, postId, commentId } = action;
+
   switch (action.type) {
     case ADD_COMMENT:
-      const { author, body, postId } = action;
-      return {
-      };
-
+      return [...state, { author, body, postId }];
+      
     case LIKE_COMMENT:
-        const { commentId } = action;
-        return  {
+        let comment = state.filter(x => x.commentId === commentId);
+        comment.voteCount++;
 
-        };
+        return [...state.filter(x => x.commentId !== commentId), comment];
 
     case EDIT_COMMENT:
-        const { author, body, commentId } = action;
-        return {
-        };
+        let comments = state.filter(x => x.commentId !== commentId);
+
+        return [ ...comments, { author, body, commentId }];
 
     case FETCH_COMMENTS: 
         const { category } = action;
@@ -41,28 +41,25 @@ const comments = (state = [], action) => {
 
 
 const posts = (state = [], action) => {
+  const { author, title, body, postId } = action;
+  
   switch (action.type) {
     case ADD_POST:
-        const { author, title, body } = action;
-        return {
-
-        };
+        return [...state, { author, title, body }];
     
     case EDIT_POST:
-        const { author, title, body, postId } = action;
-        return {
-
-        };
+        let posts = state.filter(x => x.postId !== postId);
+        return [ ...posts, { author, title, body, postId }];
+    
+    case LIKE_POST:
+        let post = state.filter(x => x.postId === postId);
+        post.voteCount++;
+        return [...state.filter(x => x.postId !== postId), post];
 
     case FETCH_POSTS: 
         const { category } = action;
-        return {
 
-        };
-    
-    case LIKE_POST:
-        const { postId } = action;
-        return  {
+        return {
 
         };
 
@@ -71,4 +68,4 @@ const posts = (state = [], action) => {
   }
 };
 
-export default combineReducers({ calendar, food });
+export default combineReducers({ comments, posts });
