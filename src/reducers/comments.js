@@ -5,7 +5,7 @@ import {
     FETCH_COMMENTS_SUCCESSFUL,
     FETCH_COMMENTS_HAS_ERRORED,
     FETCH_COMMENTS_LOADING } from "../actions";
-    
+
 const commentsInitialState = {
     items: [],
     isLoading: false,
@@ -17,18 +17,16 @@ const comments = (state = commentsInitialState, action) => {
 
   switch (action.type) {
     case ADD_COMMENT:
-      return [...state, { author, body, postId }];
+      return { ...state, items: [...state, { author, body, postId }] };
       
     case LIKE_COMMENT:
         let comment = state.filter(x => x.commentId === commentId);
         comment.voteCount++;
-
-        return [...state.filter(x => x.commentId !== commentId), comment];
+        return { ...state, items: [...state.filter(x => x.commentId !== commentId), comment] };
 
     case EDIT_COMMENT:
         let comments = state.filter(x => x.commentId !== commentId);
-
-        return [ ...comments, { author, body, commentId }];
+        return { ...state, items: [ ...comments, { author, body, commentId }] };
 
     case FETCH_COMMENTS_HAS_ERRORED: 
         return {

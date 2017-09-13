@@ -18,16 +18,28 @@ const posts = (state = postsInitialState, action) => {
   
   switch (action.type) {
     case ADD_POST:
-        return [...state, { author, title, body }];
+        return { 
+            isLoading: state.isLoading,
+            hasErrored: state.hasErrored,
+            items: [...state.items, { author, title, body }] 
+        };
     
     case EDIT_POST:
         let posts = state.filter(x => x.postId !== postId);
-        return [ ...posts, { author, title, body, postId }];
+        return { 
+            isLoading: state.isLoading, 
+            hasErrored: state.hasErrored, 
+            items: [ ...posts, { author, title, body, postId }] 
+        };
     
     case LIKE_POST:
         let post = state.filter(x => x.postId === postId);
         post.voteCount++;
-        return [...state.filter(x => x.postId !== postId), post];
+        return { 
+            isLoading: state.isLoading,
+            hasErrored: state.hasErrored, 
+            items: [...state.filter(x => x.postId !== postId), post] 
+        };
 
         case FETCH_POSTS_HAS_ERRORED: 
         return {
@@ -42,7 +54,8 @@ const posts = (state = postsInitialState, action) => {
         }; 
     case FETCH_POSTS_SUCCESSFUL: 
         return {
-            ...state,
+            hasErrored: state.hasErrored,
+            isLoading: state.isLoading,
             items: action.items
         };
 
