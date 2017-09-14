@@ -69,8 +69,10 @@ export function postsFetchData(url) {
                 return response;
             })
             .then((response) => response.json())
-            .then((posts) => dispatch(fetchPostsSuccessful(posts)))
-            .catch(() => dispatch(fetchPostsHasErrored()));
+            .then((posts) => { alert(JSON.stringify(posts, null, 2));  dispatch(fetchPostsSuccessful(posts)); })
+            .catch((error) => {
+                dispatch(fetchPostsHasErrored()); 
+            });
     };
 }
 

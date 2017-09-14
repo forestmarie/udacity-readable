@@ -6,7 +6,7 @@ class PostDetail extends Component {
       return (
         <div>
           <div className="ui fluid container">
-            <h2 class="ui header">Drew Brees Passes for 600 Yards Against Vikings</h2>
+            <h2 className="ui header">Drew Brees Passes for 600 Yards Against Vikings</h2>
             <div>By Forest Marie August 31st 2017, 9:15 AM <a href="#">edit</a> | <a href="#">delete</a></div>
             <br />
             <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa strong. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu,

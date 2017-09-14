@@ -6,7 +6,7 @@ class CommentsContainer extends Component {
       return (
         <div>
           <div className="ui form">
-            <textarea style={{"resize": ";"}} rows="3" placeholder="Add Comment"></textarea>
+            <textarea rows="3" placeholder="Add Comment"></textarea>
           </div>
           <br />
           <div>Sort by&nbsp;&nbsp;
