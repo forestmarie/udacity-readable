@@ -55,7 +55,7 @@ export function fetchPostsLoading(isLoading) {
 export function fetchPostsSuccessful(posts) {
     return {
         type: FETCH_POSTS_SUCCESSFUL,
-        posts 
+        items: posts 
     };
 }
 
@@ -69,7 +69,7 @@ export function postsFetchData(url) {
                 return response;
             })
             .then((response) => response.json())
-            .then((posts) => { alert(JSON.stringify(posts, null, 2));  dispatch(fetchPostsSuccessful(posts)); })
+            .then((posts) => dispatch(fetchPostsSuccessful(posts)))
             .catch((error) => {
                 dispatch(fetchPostsHasErrored()); 
             });

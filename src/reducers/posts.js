@@ -41,7 +41,7 @@ const posts = (state = postsInitialState, action) => {
             items: [...state.filter(x => x.postId !== postId), post] 
         };
 
-        case FETCH_POSTS_HAS_ERRORED: 
+    case FETCH_POSTS_HAS_ERRORED: 
         return {
             ...state,
             hasErrored: action.hasErrored
@@ -52,9 +52,10 @@ const posts = (state = postsInitialState, action) => {
             ...state,
             isLoading: action.isLoading
         }; 
+
     case FETCH_POSTS_SUCCESSFUL: 
         return {
-            hasErrored: state.hasErrored,
+            hasErrored: false,
             isLoading: state.isLoading,
             items: action.items
         };
