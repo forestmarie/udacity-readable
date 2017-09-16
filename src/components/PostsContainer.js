@@ -15,6 +15,7 @@ class PostsContainer extends Component {
     if (this.props.isLoading) {
       return <p>Loading...</p>;
     }
+
     return (
       <div>
         <div className="ui equal width grid">
@@ -31,7 +32,15 @@ class PostsContainer extends Component {
             </div>
           </div>
           <div className="column">
-            <div>Category: Sports | Politics | News</div>
+            <div>
+              Category:
+              {this.props.categories &&
+                this.props.categories.map(cat =>
+                  <span key={cat.name}>
+                    {cat.name} |
+                  </span>
+                )}
+            </div>
           </div>
           <div className="column">
             <div>
@@ -66,11 +75,12 @@ class PostsContainer extends Component {
   }
 }
 
-const mapStateToProps = ({ posts }) => {
+const mapStateToProps = ({ posts, categories }) => {
   return {
     items: posts.items,
     hasErrored: posts.hasErrored,
-    isLoading: posts.isLoading
+    isLoading: posts.isLoading,
+    categories: categories.items
   };
 };
 
