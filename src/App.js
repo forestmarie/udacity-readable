@@ -1,8 +1,9 @@
 import React, { Component } from "react";
+import { Route } from "react-router-dom";
+import { connect } from "react-redux";
 import PostDetail from "./components/PostDetail";
 import PostsContainer from "./components/PostsContainer";
 import EditPost from "./components/EditPost";
-import { connect } from "react-redux";
 import { categoriesFetchData } from "./actions";
 import "./App.css";
 
@@ -18,11 +19,8 @@ class App extends Component {
           <h2>Recent Posts</h2>
         </div>
         <div className="App-container">
-          <PostsContainer />
-          <div className="ui divider" />
-          <PostDetail />
-          <div className="ui divider" />
-          <EditPost />
+          <Route exactpath="/" component={PostsContainer} />
+          <Route exactpath="/posts/:id" component={PostDetail} />
         </div>
       </div>
     );
