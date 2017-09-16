@@ -19,15 +19,13 @@ class App extends Component {
           <h2>Recent Posts</h2>
         </div>
         <div className="App-container">
-          <Route exactpath="/" component={PostsContainer} />
-          <Route exactpath="/posts/:id" component={PostDetail} />
+          <Route exact path="/(|posts)/" component={PostsContainer} />
+          <Route exact path="/posts/:id" component={PostDetail} />
         </div>
       </div>
     );
   }
 }
-
-const mapStateToProps = state => ({});
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -35,4 +33,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(null, mapDispatchToProps)(App);

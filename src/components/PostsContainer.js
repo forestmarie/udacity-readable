@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Card, Icon } from "semantic-ui-react";
 import { postsFetchData, postsByCategoryFetchData, sortPosts } from "../actions/";
 import moment from "moment";
 
@@ -12,6 +13,8 @@ class PostsContainer extends Component {
     super();
     this.categoryChanged = this.categoryChanged.bind(this);
     this.sortFilterChanged = this.sortFilterChanged.bind(this);
+    this._viewDetails = this._viewDetails.bind(this);
+
     this.state = {
       currentCategory: "All",
       currentSortFilter: ""
@@ -46,25 +49,31 @@ class PostsContainer extends Component {
     this.props.sortPosts(sortFilter);
   };
 
+  _viewDetails(postId) {
+    alert(postId);
+  }
+
   _renderPosts() {
     const { posts } = this.props;
 
     if (posts && posts.length > 0) {
-      return posts.map(item => (
-        <div className="ui cards">
-          <div key={item.id} className="ui fluid card">
-            <div className="content">
-              <div className="header">{item.title}</div>
-              <div className="meta">
-                by {item.author}, {moment.unix(item.timestamp).format("YYYY-MM-DD HH:mm")}
-              </div>
-            </div>
-            <div className="extra content">
-              <i className="thumbs up icon">{item.voteScore}</i>
-            </div>
-          </div>
-        </div>
-      ));
+      return (
+        <Card.Group>
+          {posts.map(item => (
+            <Card fluid onClick={() => this._viewDetails(item.id)}>
+              <Card.Content>
+                <Card.Header>{item.title}</Card.Header>
+                <Card.Meta>
+                  by {item.author}, {moment.unix(item.timestamp).format("YYYY-MM-DD HH:mm")}
+                </Card.Meta>
+              </Card.Content>
+              <Card.Content extra meta>
+                <i className="thumbs up icon">{item.voteScore}</i>
+              </Card.Content>
+            </Card>
+          ))}
+        </Card.Group>
+      );
     } else {
       return (
         <div className="ui negative message">
