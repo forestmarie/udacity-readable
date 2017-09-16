@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { Route } from "react-router-dom";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import PostDetail from "./components/PostDetail";
 import PostsContainer from "./components/PostsContainer";
-import EditPost from "./components/EditPost";
+import AddPost from "./components/AddPost";
 import { categoriesFetchData } from "./actions";
 import "./App.css";
 
@@ -20,7 +21,8 @@ class App extends Component {
         </div>
         <div className="App-container">
           <Route exact path="/(|posts)/" component={PostsContainer} />
-          <Route exact path="/posts/:id" component={PostDetail} />
+          <Route exact path="/posts/add" component={AddPost} />
+          <Route exact path="/posts/details/:id" component={PostDetail} />
         </div>
       </div>
     );
@@ -33,4 +35,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(App);
+export default withRouter(connect(null, mapDispatchToProps)(App));

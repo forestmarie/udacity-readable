@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Card, Icon } from "semantic-ui-react";
-import { postsFetchData, postsByCategoryFetchData, sortPosts } from "../actions/";
+import { withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { Card, Message } from "semantic-ui-react";
 import moment from "moment";
+import { postsFetchData, postsByCategoryFetchData, sortPosts } from "../actions/";
 
 class PostsContainer extends Component {
   componentDidMount() {
@@ -50,7 +52,7 @@ class PostsContainer extends Component {
   };
 
   _viewDetails(postId) {
-    alert(postId);
+    this.props.history.push(`/posts/details/${postId}`);
   }
 
   _renderPosts() {
@@ -60,15 +62,17 @@ class PostsContainer extends Component {
       return (
         <Card.Group>
           {posts.map(item => (
-            <Card fluid onClick={() => this._viewDetails(item.id)}>
+            <Card key={item.id} fluid onClick={() => this._viewDetails(item.id)}>
               <Card.Content>
                 <Card.Header>{item.title}</Card.Header>
                 <Card.Meta>
                   by {item.author}, {moment.unix(item.timestamp).format("YYYY-MM-DD HH:mm")}
                 </Card.Meta>
               </Card.Content>
-              <Card.Content extra meta>
-                <i className="thumbs up icon">{item.voteScore}</i>
+              <Card.Content extra>
+                <Card.Meta>
+                  <i className="thumbs up icon">{item.voteScore}</i>
+                </Card.Meta>
               </Card.Content>
             </Card>
           ))}
@@ -76,10 +80,10 @@ class PostsContainer extends Component {
       );
     } else {
       return (
-        <div className="ui negative message">
-          <div className="header">We&#x27;re sorry but no posts were found.</div>
+        <Message negative>
+          <Message.Header>We&#x27;re sorry but no posts were found.</Message.Header>
           <p>Please try a different category</p>
-        </div>
+        </Message>
       );
     }
   }
@@ -93,7 +97,6 @@ class PostsContainer extends Component {
           <button
             onClick={this.sortFilterChanged}
             className={currentSortFilter === "timestamp" ? "ui button disabled" : "ui button"}
-            role="button"
           >
             Date
           </button>
@@ -101,7 +104,6 @@ class PostsContainer extends Component {
           <button
             onClick={this.sortFilterChanged}
             className={currentSortFilter === "voteScore" ? "ui button disabled" : "ui button"}
-            role="button"
           >
             Votes
           </button>
@@ -119,7 +121,7 @@ class PostsContainer extends Component {
         Category: &nbsp;
         {categories &&
           categories.map(cat => (
-            <span>
+            <span key={cat.name}>
               <button
                 className={cat.name === currentCategory ? "ui button disabled" : "ui button"}
                 key={cat.name}
@@ -154,9 +156,11 @@ class PostsContainer extends Component {
           {this._renderCategories()}
           <div className="column">
             <div>
-              <button className="ui icon right labeled right floated primary button">
-                Add New Post <i className="plus icon" />
-              </button>
+              <Link to="/posts/add">
+                <button className="ui icon right labeled right floated primary button">
+                  Add New Post <i className="plus icon" />
+                </button>
+              </Link>
             </div>
           </div>
         </div>

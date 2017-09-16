@@ -1,29 +1,29 @@
-import React, { Component } from 'react';
-import Comment from './Comment';
+import React, { Component } from "react";
+import Comment from "./Comment";
 
 class CommentsContainer extends Component {
-    render() {
-      return (
+  render() {
+    return (
+      <div>
+        <div className="ui form">
+          <textarea rows="3" placeholder="Add Comment" />
+        </div>
+        <br />
         <div>
-          <div className="ui form">
-            <textarea rows="3" placeholder="Add Comment"></textarea>
-          </div>
-          <br />
-          <div>Sort by&nbsp;&nbsp;
-            <div className="ui buttons">
-              <button className="ui button" role="button">Date</button>
-              <div className="or">
-              </div>
-              <button className="ui button" role="button">Votes</button>
-            </div>
-          </div>
-          <br />
-          <div className="ui cards">
-            <Comment />
+          Sort by&nbsp;&nbsp;
+          <div className="ui buttons">
+            <button className="ui button">Date</button>
+            <div className="or" />
+            <button className="ui button">Votes</button>
           </div>
         </div>
-      );
-    }
+        <br />
+        <div className="ui cards">
+          <Comment />
+        </div>
+      </div>
+    );
   }
+}
 
-  export default CommentsContainer;
+export default CommentsContainer;
