@@ -5,12 +5,9 @@ export const FETCH_POSTS_SUCCESSFUL = "FETCH_POSTS_SUCCESSFUL";
 export const FETCH_POSTS_HAS_ERRORED = "FETCH_POSTS_HAS_ERRORED";
 export const FETCH_POSTS_LOADING = "FETCH_POSTS_LOADING";
 
-export const FETCH_POSTS_BY_CATEGORY_SUCCESSFUL =
-  "FETCH_POSTS_BY_CATEGORY_SUCCESSFUL";
-export const FETCH_POSTS_BY_CATEGORY_HAS_ERRORED =
-  "FETCH_POSTS_BY_CATEGORY_HAS_ERRORED";
-export const FETCH_POSTS_BY_CATEGORY_LOADING =
-  "FETCH_POSTS_BY_CATEGORY_LOADING";
+export const FETCH_POSTS_BY_CATEGORY_SUCCESSFUL = "FETCH_POSTS_BY_CATEGORY_SUCCESSFUL";
+export const FETCH_POSTS_BY_CATEGORY_HAS_ERRORED = "FETCH_POSTS_BY_CATEGORY_HAS_ERRORED";
+export const FETCH_POSTS_BY_CATEGORY_LOADING = "FETCH_POSTS_BY_CATEGORY_LOADING";
 
 export const ADD_COMMENT = "ADD_COMMENT";
 export const LIKE_COMMENT = "LIKE_COMMENT";
@@ -21,6 +18,7 @@ export const FETCH_COMMENTS_LOADING = "FETCH_COMMENTS_LOADING";
 export const FETCH_CATEGORIES_SUCCESSFUL = "FETCH_CATEGORIES_SUCCESSFUL";
 export const FETCH_CATEGORIES_HAS_ERRORED = "FETCH_CATEGORIES_HAS_ERRORED";
 export const FETCH_CATEGORIES_LOADING = "FETCH_CATEGORIES_LOADING";
+export const SORT_POSTS = "SORT_POSTS";
 
 export function fetchCategoriesHasErrored() {
   return {
@@ -123,6 +121,13 @@ export function postsFetchData(url, category = null) {
       .catch(error => {
         dispatch(fetchPostsHasErrored());
       });
+  };
+}
+
+export function sortPosts(filter) {
+  return {
+    type: SORT_POSTS,
+    filter
   };
 }
 

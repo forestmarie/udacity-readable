@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { postsFetchData, postsByCategoryFetchData } from "../actions/";
+import { postsFetchData, postsByCategoryFetchData, sortPosts } from "../actions/";
 import moment from "moment";
 
 class PostsContainer extends Component {
@@ -11,20 +11,124 @@ class PostsContainer extends Component {
   constructor() {
     super();
     this.categoryChanged = this.categoryChanged.bind(this);
+    this.sortFilterChanged = this.sortFilterChanged.bind(this);
+    this.state = {
+      currentCategory: "All",
+      currentSortFilter: ""
+    };
   }
 
   categoryChanged = e => {
     e.preventDefault();
     let category = e.target.innerText;
 
-    if (category !== "All categories") {
-      this.props.fetchPostsByCategory(
-        `http://localhost:3001/${e.target.innerText}/posts`
-      );
+    this.setState({
+      currentCategory: category,
+      currentSortFilter: ""
+    });
+
+    if (category !== "All") {
+      this.props.fetchPostsByCategory(`http://localhost:3001/${category}/posts`);
     } else {
       this.props.fetchPosts("http://localhost:3001/posts");
     }
   };
+
+  sortFilterChanged = e => {
+    e.preventDefault();
+    let innerText = e.target.innerText;
+    let sortFilter = innerText === "Votes" ? "voteScore" : "timestamp";
+
+    this.setState({
+      currentSortFilter: sortFilter
+    });
+
+    this.props.sortPosts(sortFilter);
+  };
+
+  _renderPosts() {
+    const { posts } = this.props;
+
+    if (posts && posts.length > 0) {
+      return posts.map(item => (
+        <div className="ui cards">
+          <div key={item.id} className="ui fluid card">
+            <div className="content">
+              <div className="header">{item.title}</div>
+              <div className="meta">
+                by {item.author}, {moment.unix(item.timestamp).format("YYYY-MM-DD HH:mm")}
+              </div>
+            </div>
+            <div className="extra content">
+              <i className="thumbs up icon">{item.voteScore}</i>
+            </div>
+          </div>
+        </div>
+      ));
+    } else {
+      return (
+        <div className="ui negative message">
+          <div className="header">We&#x27;re sorry but no posts were found.</div>
+          <p>Please try a different category</p>
+        </div>
+      );
+    }
+  }
+
+  _renderSortFilters() {
+    const { currentSortFilter } = this.state;
+    return (
+      <div className="column">
+        Sort by&nbsp;&nbsp;
+        <div className="ui buttons">
+          <button
+            onClick={this.sortFilterChanged}
+            className={currentSortFilter === "timestamp" ? "ui button disabled" : "ui button"}
+            role="button"
+          >
+            Date
+          </button>
+          <div className="or" />
+          <button
+            onClick={this.sortFilterChanged}
+            className={currentSortFilter === "voteScore" ? "ui button disabled" : "ui button"}
+            role="button"
+          >
+            Votes
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  _renderCategories() {
+    const { currentCategory } = this.state;
+    const { categories } = this.props;
+
+    return (
+      <div className="column">
+        Category: &nbsp;
+        {categories &&
+          categories.map(cat => (
+            <span>
+              <button
+                className={cat.name === currentCategory ? "ui button disabled" : "ui button"}
+                key={cat.name}
+                onClick={this.categoryChanged}
+              >
+                {cat.name}
+              </button>&nbsp;&nbsp;
+            </span>
+          ))}
+        <button
+          className={"All" === currentCategory ? "ui button disabled" : "ui button"}
+          onClick={this.categoryChanged}
+        >
+          All
+        </button>
+      </div>
+    );
+  }
 
   render() {
     if (this.props.hasErrored) {
@@ -34,70 +138,20 @@ class PostsContainer extends Component {
       return <p>Loading...</p>;
     }
 
-    let posts = this.props.items.map(item =>
-      <div className="ui cards">
-        <div key={item.id} className="ui fluid card">
-          <div className="content">
-            <div className="header">
-              {item.title}
-            </div>
-            <div className="meta">
-              by {item.author},{" "}
-              {moment.unix(item.timestamp).format("YYYY-MM-DD HH:mm")}
-            </div>
-          </div>
-          <div className="extra content">
-            <i className="thumbs up icon">
-              {item.voteScore}
-            </i>
-          </div>
-        </div>
-      </div>
-    );
-
-    let noPostsFound = (
-      <div className="ui negative message">
-        <div className="header">We&#x27;re sorry but no posts were found.</div>
-        <p>Please try a different category</p>
-      </div>
-    );
-
     return (
       <div>
         <div className="ui equal width grid">
-          <div className="column">
-            Sort by&nbsp;&nbsp;
-            <div className="ui buttons">
-              <button className="ui button" role="button">
-                Date
-              </button>
-              <div className="or" />
-              <button className="ui button" role="button">
-                Votes
-              </button>
-            </div>
-          </div>
-          <div className="column">
-            Category: &nbsp;
-            {this.props.categories &&
-              this.props.categories.map(cat =>
-                <span>
-                  <button key={cat.name} onClick={this.categoryChanged}>
-                    {cat.name}
-                  </button>&nbsp;&nbsp;
-                </span>
-              )}
-            <button onClick={this.categoryChanged}>All categories</button>
-          </div>
+          {this._renderSortFilters()}
+          {this._renderCategories()}
           <div className="column">
             <div>
-              <button className="ui icon right labeled primary button">
+              <button className="ui icon right labeled right floated primary button">
                 Add New Post <i className="plus icon" />
               </button>
             </div>
           </div>
         </div>
-        {this.props.items.length > 0 ? posts : noPostsFound}
+        {this._renderPosts()}
       </div>
     );
   }
@@ -105,7 +159,7 @@ class PostsContainer extends Component {
 
 const mapStateToProps = ({ posts, categories }) => {
   return {
-    items: posts.items,
+    posts: posts.items,
     hasErrored: posts.hasErrored,
     isLoading: posts.isLoading,
     categories: categories.items
@@ -115,7 +169,8 @@ const mapStateToProps = ({ posts, categories }) => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchPosts: url => dispatch(postsFetchData(url)),
-    fetchPostsByCategory: url => dispatch(postsByCategoryFetchData(url))
+    fetchPostsByCategory: url => dispatch(postsByCategoryFetchData(url)),
+    sortPosts: filter => dispatch(sortPosts(filter))
   };
 };
 

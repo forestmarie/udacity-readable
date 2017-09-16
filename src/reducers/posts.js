@@ -7,7 +7,8 @@ import {
   FETCH_POSTS_LOADING,
   FETCH_POSTS_BY_CATEGORY_SUCCESSFUL,
   FETCH_POSTS_BY_CATEGORY_HAS_ERRORED,
-  FETCH_POSTS_BY_CATEGORY_LOADING
+  FETCH_POSTS_BY_CATEGORY_LOADING,
+  SORT_POSTS
 } from "../actions";
 
 const postsInitialState = {
@@ -80,6 +81,22 @@ const posts = (state = postsInitialState, action) => {
         hasErrored: false,
         isLoading: state.isLoading,
         items: action.items
+      };
+
+    case SORT_POSTS:
+      let currentPosts = [...state.items];
+      let sortKey = action.filter;
+
+      return {
+        ...state,
+        items: currentPosts.sort((a, b) => {
+          if (a[sortKey] < b[sortKey]) {
+            return 1;
+          } else if (a[sortKey] > b[sortKey]) {
+            return -1;
+          }
+          return 0;
+        })
       };
 
     default:
