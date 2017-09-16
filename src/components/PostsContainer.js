@@ -15,10 +15,15 @@ class PostsContainer extends Component {
 
   categoryChanged = e => {
     e.preventDefault();
-    console.dir(e.target.innerText);
-    this.props.fetchPostsByCategory(
-      `http://localhost:3001/${e.target.innerText}/posts`
-    );
+    let category = e.target.innerText;
+
+    if (category !== "All categories") {
+      this.props.fetchPostsByCategory(
+        `http://localhost:3001/${e.target.innerText}/posts`
+      );
+    } else {
+      this.props.fetchPosts("http://localhost:3001/posts");
+    }
   };
 
   render() {
@@ -28,6 +33,34 @@ class PostsContainer extends Component {
     if (this.props.isLoading) {
       return <p>Loading...</p>;
     }
+
+    let posts = this.props.items.map(item =>
+      <div className="ui cards">
+        <div key={item.id} className="ui fluid card">
+          <div className="content">
+            <div className="header">
+              {item.title}
+            </div>
+            <div className="meta">
+              by {item.author},{" "}
+              {moment.unix(item.timestamp).format("YYYY-MM-DD HH:mm")}
+            </div>
+          </div>
+          <div className="extra content">
+            <i className="thumbs up icon">
+              {item.voteScore}
+            </i>
+          </div>
+        </div>
+      </div>
+    );
+
+    let noPostsFound = (
+      <div className="ui negative message">
+        <div className="header">We&#x27;re sorry but no posts were found.</div>
+        <p>Please try a different category</p>
+      </div>
+    );
 
     return (
       <div>
@@ -54,6 +87,7 @@ class PostsContainer extends Component {
                   </button>&nbsp;&nbsp;
                 </span>
               )}
+            <button onClick={this.categoryChanged}>All categories</button>
           </div>
           <div className="column">
             <div>
@@ -63,26 +97,7 @@ class PostsContainer extends Component {
             </div>
           </div>
         </div>
-        <div className="ui cards">
-          {this.props.items.map(item =>
-            <div key={item.id} className="ui fluid card">
-              <div className="content">
-                <div className="header">
-                  {item.title}
-                </div>
-                <div className="meta">
-                  by {item.author},{" "}
-                  {moment.unix(item.timestamp).format("YYYY-MM-DD HH:mm")}
-                </div>
-              </div>
-              <div className="extra content">
-                <i className="thumbs up icon">
-                  {item.voteScore}
-                </i>
-              </div>
-            </div>
-          )}
-        </div>
+        {this.props.items.length > 0 ? posts : noPostsFound}
       </div>
     );
   }
