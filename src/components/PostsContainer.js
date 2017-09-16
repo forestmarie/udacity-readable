@@ -1,12 +1,25 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { postsFetchData } from "../actions/";
+import { postsFetchData, postsByCategoryFetchData } from "../actions/";
 import moment from "moment";
 
 class PostsContainer extends Component {
   componentDidMount() {
-    this.props.fetchData("http://localhost:3001/posts");
+    this.props.fetchPosts("http://localhost:3001/posts");
   }
+
+  constructor() {
+    super();
+    this.categoryChanged = this.categoryChanged.bind(this);
+  }
+
+  categoryChanged = e => {
+    e.preventDefault();
+    console.dir(e.target.innerText);
+    this.props.fetchPostsByCategory(
+      `http://localhost:3001/${e.target.innerText}/posts`
+    );
+  };
 
   render() {
     if (this.props.hasErrored) {
@@ -32,15 +45,15 @@ class PostsContainer extends Component {
             </div>
           </div>
           <div className="column">
-            <div>
-              Category:
-              {this.props.categories &&
-                this.props.categories.map(cat =>
-                  <span key={cat.name}>
-                    {cat.name} |
-                  </span>
-                )}
-            </div>
+            Category: &nbsp;
+            {this.props.categories &&
+              this.props.categories.map(cat =>
+                <span>
+                  <button key={cat.name} onClick={this.categoryChanged}>
+                    {cat.name}
+                  </button>&nbsp;&nbsp;
+                </span>
+              )}
           </div>
           <div className="column">
             <div>
@@ -86,7 +99,8 @@ const mapStateToProps = ({ posts, categories }) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchData: url => dispatch(postsFetchData(url))
+    fetchPosts: url => dispatch(postsFetchData(url)),
+    fetchPostsByCategory: url => dispatch(postsByCategoryFetchData(url))
   };
 };
 

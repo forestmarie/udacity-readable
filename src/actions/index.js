@@ -5,13 +5,19 @@ export const FETCH_POSTS_SUCCESSFUL = "FETCH_POSTS_SUCCESSFUL";
 export const FETCH_POSTS_HAS_ERRORED = "FETCH_POSTS_HAS_ERRORED";
 export const FETCH_POSTS_LOADING = "FETCH_POSTS_LOADING";
 
+export const FETCH_POSTS_BY_CATEGORY_SUCCESSFUL =
+  "FETCH_POSTS_BY_CATEGORY_SUCCESSFUL";
+export const FETCH_POSTS_BY_CATEGORY_HAS_ERRORED =
+  "FETCH_POSTS_BY_CATEGORY_HAS_ERRORED";
+export const FETCH_POSTS_BY_CATEGORY_LOADING =
+  "FETCH_POSTS_BY_CATEGORY_LOADING";
+
 export const ADD_COMMENT = "ADD_COMMENT";
 export const LIKE_COMMENT = "LIKE_COMMENT";
 export const EDIT_COMMENT = "EDIT_COMMENT";
 export const FETCH_COMMENTS_SUCCESSFUL = "FETCH_COMMENTS_SUCCESSFUL";
 export const FETCH_COMMENTS_HAS_ERRORED = "FETCH_COMMENTS_HAS_ERRORED";
 export const FETCH_COMMENTS_LOADING = "FETCH_COMMENTS_LOADING";
-
 export const FETCH_CATEGORIES_SUCCESSFUL = "FETCH_CATEGORIES_SUCCESSFUL";
 export const FETCH_CATEGORIES_HAS_ERRORED = "FETCH_CATEGORIES_HAS_ERRORED";
 export const FETCH_CATEGORIES_LOADING = "FETCH_CATEGORIES_LOADING";
@@ -103,7 +109,7 @@ export function fetchPostsSuccessful(posts) {
   };
 }
 
-export function postsFetchData(url) {
+export function postsFetchData(url, category = null) {
   return dispatch => {
     dispatch(fetchPostsLoading(true));
 
@@ -116,6 +122,44 @@ export function postsFetchData(url) {
       .then(posts => dispatch(fetchPostsSuccessful(posts)))
       .catch(error => {
         dispatch(fetchPostsHasErrored());
+      });
+  };
+}
+
+export function fetchPostsByCategoryHasErrored() {
+  return {
+    type: FETCH_POSTS_BY_CATEGORY_HAS_ERRORED,
+    hasErrored: true
+  };
+}
+
+export function fetchPostsByCategoryLoading(isLoading) {
+  return {
+    type: FETCH_POSTS_BY_CATEGORY_LOADING,
+    isLoading
+  };
+}
+
+export function fetchPostsByCategorySuccessful(posts) {
+  return {
+    type: FETCH_POSTS_BY_CATEGORY_SUCCESSFUL,
+    items: posts
+  };
+}
+
+export function postsByCategoryFetchData(url) {
+  return dispatch => {
+    dispatch(fetchPostsByCategoryLoading(true));
+
+    fetch(url, { headers: { Authorization: "foobar" } })
+      .then(response => {
+        dispatch(fetchPostsByCategoryLoading(false));
+        return response;
+      })
+      .then(response => response.json())
+      .then(posts => dispatch(fetchPostsByCategorySuccessful(posts)))
+      .catch(error => {
+        dispatch(fetchPostsByCategoryHasErrored());
       });
   };
 }
