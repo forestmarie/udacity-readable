@@ -1,4 +1,4 @@
-export const ADD_POST = "ADD_POST";
+export const ADD_POST_SUCCESSFUL = "ADD_POST_SUCCESSFUL";
 export const LIKE_POST = "LIKE_POST";
 export const EDIT_POST = "EDIT_POST";
 export const FETCH_POSTS_SUCCESSFUL = "FETCH_POSTS_SUCCESSFUL";
@@ -60,12 +60,42 @@ export function categoriesFetchData(url) {
   };
 }
 
-export function addPost({ author, title, body }) {
+export function addPostSuccessful(post) {
   return {
-    type: ADD_POST,
-    author,
-    title,
-    body
+    type: ADD_POST_SUCCESSFUL,
+    post: post
+  };
+}
+
+export function addPostData(url, post) {
+  let addPostRequest = {
+    ...post,
+    timestamp: Date.now(),
+    category: {
+      name: "redux",
+      path: "redux"
+    }
+  };
+
+  const headers = {
+    Accept: "application/json",
+    Authorization: "foobar",
+    "Content-Type": "application/json"
+  };
+
+  return dispatch => {
+    fetch(url, {
+      headers: headers,
+      method: "POST",
+      body: JSON.stringify(addPostRequest)
+    })
+      .then(response => {
+        dispatch(addPostSuccessful(addPostRequest));
+        return response;
+      })
+      .catch(error => {
+        alert(error);
+      });
   };
 }
 

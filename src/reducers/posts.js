@@ -1,5 +1,5 @@
 import {
-  ADD_POST,
+  ADD_POST_SUCCESSFUL,
   LIKE_POST,
   EDIT_POST,
   FETCH_POSTS_SUCCESSFUL,
@@ -21,11 +21,10 @@ const posts = (state = postsInitialState, action) => {
   const { author, title, body, postId } = action;
 
   switch (action.type) {
-    case ADD_POST:
+    case ADD_POST_SUCCESSFUL:
       return {
-        isLoading: state.isLoading,
-        hasErrored: state.hasErrored,
-        items: [...state.items, { author, title, body }]
+        ...state,
+        items: [...state.items, action.post]
       };
 
     case EDIT_POST:

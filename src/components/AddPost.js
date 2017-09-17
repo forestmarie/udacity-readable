@@ -1,10 +1,30 @@
 import React, { Component } from "react";
 import { Button, Form } from "semantic-ui-react";
+import { connect } from "react-redux";
+import { addPostData } from "../actions/";
+
+// TODO - Move this to utils
+function _generateUUID() {
+  var d = new Date().getTime();
+  if (typeof performance !== "undefined" && typeof performance.now === "function") {
+    d += performance.now(); //use high-precision timer if available
+  }
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    var r = ((d + Math.random() * 16) % 16) | 0;
+    d = Math.floor(d / 16);
+    return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+  });
+}
 
 class AddPost extends Component {
   handleSubmit = e => {
     e.preventDefault();
-    console.dir(this.body);
+    this.props.addPost("http://localhost:3001/posts", {
+      id: _generateUUID(),
+      title: this.title.value,
+      author: this.author.value,
+      body: this.body.value
+    });
   };
 
   state = {
@@ -47,4 +67,10 @@ class AddPost extends Component {
   }
 }
 
-export default AddPost;
+const mapDispatchToProps = dispatch => {
+  return {
+    addPost: (url, post) => dispatch(addPostData(url, post))
+  };
+};
+
+export default connect(null, mapDispatchToProps)(AddPost);
