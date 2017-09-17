@@ -66,7 +66,7 @@ class PostsContainer extends Component {
               <Card.Content>
                 <Card.Header>{item.title}</Card.Header>
                 <Card.Meta>
-                  by {item.author}, {moment.unix(item.timestamp).format("YYYY-MM-DD HH:mm")}
+                  by {item.author}, {moment(item.timestamp).format("YYYY-MM-DD HH:mm")}
                 </Card.Meta>
               </Card.Content>
               <Card.Content extra>
