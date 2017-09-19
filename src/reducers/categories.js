@@ -2,7 +2,7 @@ import {
   FETCH_CATEGORIES_SUCCESSFUL,
   FETCH_CATEGORIES_HAS_ERRORED,
   FETCH_CATEGORIES_LOADING
-} from "../actions";
+} from "../actions/categories";
 
 const categoriesInitialState = {
   items: [],

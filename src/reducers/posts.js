@@ -9,7 +9,7 @@ import {
   FETCH_POSTS_BY_CATEGORY_HAS_ERRORED,
   FETCH_POSTS_BY_CATEGORY_LOADING,
   SORT_POSTS
-} from "../actions";
+} from "../actions/posts";
 
 const postsInitialState = {
   items: [],

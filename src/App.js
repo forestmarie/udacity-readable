@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 import PostDetail from "./components/PostDetail";
 import PostsContainer from "./components/PostsContainer";
 import AddPost from "./components/AddPost";
-import { categoriesFetchData } from "./actions";
+import { categoriesFetchData } from "./actions/categories";
 import "./App.css";
 
 class App extends Component {

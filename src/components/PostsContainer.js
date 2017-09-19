@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Card, Message } from "semantic-ui-react";
 import moment from "moment";
-import { postsFetchData, postsByCategoryFetchData, sortPosts } from "../actions/";
+import { postsFetchData, postsByCategoryFetchData, sortPosts } from "../actions/posts";
 
 class PostsContainer extends Component {
   componentDidMount() {

@@ -1,35 +1,30 @@
 import React, { Component } from "react";
-import { Button, Form } from "semantic-ui-react";
+import { Button, Form, Dropdown } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { addPostData } from "../actions/";
-
-// TODO - Move this to utils
-function _generateUUID() {
-  var d = new Date().getTime();
-  if (typeof performance !== "undefined" && typeof performance.now === "function") {
-    d += performance.now(); //use high-precision timer if available
-  }
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
-    var r = ((d + Math.random() * 16) % 16) | 0;
-    d = Math.floor(d / 16);
-    return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
-  });
-}
+import { addPostData } from "../actions/posts";
+import generateUUID from "../utils";
 
 class AddPost extends Component {
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.addPost("http://localhost:3001/posts", {
-      id: _generateUUID(),
-      title: this.title.value,
-      author: this.author.value,
-      body: this.body.value
-    });
+  state = {
+    body: "",
+    category: ""
   };
 
-  state = {
-    body: ""
+  handleSubmit = e => {
+    e.preventDefault();
+
+    const post = {
+      id: generateUUID(),
+      title: this.title.value,
+      author: this.author.value,
+      body: this.body.value,
+      category: this.state.category
+    };
+
+    var result = this.props.addPost("http://localhost:3001/posts", post);
   };
+
+  handleCategoryChange = (e, { value }) => this.setState({ category: value });
 
   handleChange = event => {
     this.setState({ body: event.target.innerHtml });
@@ -46,6 +41,17 @@ class AddPost extends Component {
         <div className="field">
           <label>Author</label>
           <input type="text" placeholder="Author" ref={input => (this.author = input)} />
+        </div>
+
+        <div className="field">
+          <label>Category</label>
+          <Dropdown
+            compact
+            placeholder="Select category"
+            value={this.state.category}
+            options={this.props.categoryOptions}
+            onChange={this.handleCategoryChange}
+          />
         </div>
 
         <div className="field">
@@ -67,10 +73,24 @@ class AddPost extends Component {
   }
 }
 
+const mapStateToProps = ({ categories }) => {
+  let options = categories.items.map(x => {
+    return {
+      key: x.path,
+      text: x.name,
+      value: x.path
+    };
+  });
+
+  return {
+    categoryOptions: options
+  };
+};
+
 const mapDispatchToProps = dispatch => {
   return {
     addPost: (url, post) => dispatch(addPostData(url, post))
   };
 };
 
-export default connect(null, mapDispatchToProps)(AddPost);
+export default connect(mapStateToProps, mapDispatchToProps)(AddPost);
