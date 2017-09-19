@@ -26,7 +26,7 @@ export function addPostData(url, post) {
   };
 
   return dispatch => {
-    fetch(url, {
+    return fetch(url, {
       headers: baseFetchHeaders,
       method: "POST",
       body: JSON.stringify(addPostRequest)

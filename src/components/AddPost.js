@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Button, Form, Dropdown } from "semantic-ui-react";
 import { connect } from "react-redux";
+import toastr from "toastr";
 import { addPostData } from "../actions/posts";
 import generateUUID from "../utils";
 
@@ -21,7 +22,10 @@ class AddPost extends Component {
       category: this.state.category
     };
 
-    var result = this.props.addPost("http://localhost:3001/posts", post);
+    this.props.addPost("http://localhost:3001/posts", post).then(() => {
+      toastr.info("Post was added successfully!");
+      document.getElementById("addForm").reset();
+    });
   };
 
   handleCategoryChange = (e, { value }) => this.setState({ category: value });
@@ -32,7 +36,7 @@ class AddPost extends Component {
 
   render() {
     return (
-      <form className="ui form" onSubmit={this.handleSubmit}>
+      <form id="addForm" className="ui form" onSubmit={this.handleSubmit}>
         <div className="field">
           <label>Title</label>
           <input type="text" placeholder="Title" ref={input => (this.title = input)} />
