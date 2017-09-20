@@ -1,15 +1,11 @@
 import { baseFetchHeaders } from "../utils/http-helpers";
+import { fetchErrored, fetchLoading } from "./common";
 
 export const ADD_POST_SUCCESSFUL = "ADD_POST_SUCCESSFUL";
 export const LIKE_POST = "LIKE_POST";
 export const EDIT_POST = "EDIT_POST";
 export const FETCH_POSTS_SUCCESSFUL = "FETCH_POSTS_SUCCESSFUL";
-export const FETCH_POSTS_HAS_ERRORED = "FETCH_POSTS_HAS_ERRORED";
-export const FETCH_POSTS_LOADING = "FETCH_POSTS_LOADING";
-
 export const FETCH_POSTS_BY_CATEGORY_SUCCESSFUL = "FETCH_POSTS_BY_CATEGORY_SUCCESSFUL";
-export const FETCH_POSTS_BY_CATEGORY_HAS_ERRORED = "FETCH_POSTS_BY_CATEGORY_HAS_ERRORED";
-export const FETCH_POSTS_BY_CATEGORY_LOADING = "FETCH_POSTS_BY_CATEGORY_LOADING";
 export const SORT_POSTS = "SORT_POSTS";
 
 export function addPostSuccessful(post) {
@@ -58,20 +54,6 @@ export function editPost({ author, title, body, postId }) {
   };
 }
 
-export function fetchPostsHasErrored() {
-  return {
-    type: FETCH_POSTS_HAS_ERRORED,
-    hasErrored: true
-  };
-}
-
-export function fetchPostsLoading(isLoading) {
-  return {
-    type: FETCH_POSTS_LOADING,
-    isLoading
-  };
-}
-
 export function fetchPostsSuccessful(posts) {
   return {
     type: FETCH_POSTS_SUCCESSFUL,
@@ -80,18 +62,20 @@ export function fetchPostsSuccessful(posts) {
 }
 
 export function postsFetchData(url, category = null) {
-  return dispatch => {
-    dispatch(fetchPostsLoading(true));
+  const action = "posts";
 
-    fetch(url, { headers: baseFetchHeaders })
+  return dispatch => {
+    dispatch(fetchLoading(action, true));
+
+    return fetch(url, { headers: baseFetchHeaders })
       .then(response => {
-        dispatch(fetchPostsLoading(false));
+        dispatch(fetchLoading(action, false));
         return response;
       })
       .then(response => response.json())
       .then(posts => dispatch(fetchPostsSuccessful(posts)))
       .catch(error => {
-        dispatch(fetchPostsHasErrored());
+        dispatch(fetchErrored(action));
       });
   };
 }
@@ -103,20 +87,6 @@ export function sortPosts(filter) {
   };
 }
 
-export function fetchPostsByCategoryHasErrored() {
-  return {
-    type: FETCH_POSTS_BY_CATEGORY_HAS_ERRORED,
-    hasErrored: true
-  };
-}
-
-export function fetchPostsByCategoryLoading(isLoading) {
-  return {
-    type: FETCH_POSTS_BY_CATEGORY_LOADING,
-    isLoading
-  };
-}
-
 export function fetchPostsByCategorySuccessful(posts) {
   return {
     type: FETCH_POSTS_BY_CATEGORY_SUCCESSFUL,
@@ -125,18 +95,20 @@ export function fetchPostsByCategorySuccessful(posts) {
 }
 
 export function postsByCategoryFetchData(url) {
+  const action = "posts-by-category";
+
   return dispatch => {
-    dispatch(fetchPostsByCategoryLoading(true));
+    dispatch(fetchLoading(action, true));
 
     fetch(url, { headers: baseFetchHeaders })
       .then(response => {
-        dispatch(fetchPostsByCategoryLoading(false));
+        dispatch(fetchLoading(action, false));
         return response;
       })
       .then(response => response.json())
       .then(posts => dispatch(fetchPostsByCategorySuccessful(posts)))
       .catch(error => {
-        dispatch(fetchPostsByCategoryHasErrored());
+        dispatch(fetchErrored(action));
       });
   };
 }

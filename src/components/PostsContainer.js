@@ -169,11 +169,21 @@ class PostsContainer extends Component {
   }
 }
 
-const mapStateToProps = ({ posts, categories }) => {
+const mapStateToProps = ({ posts, categories, common }) => {
+  let errorsFound = false;
+  if (common && common.errors && common.errors["posts"]) {
+    errorsFound = true;
+  }
+
+  let isLoading = false;
+  if (common && common.loading["posts"]) {
+    isLoading = true;
+  }
+
   return {
     posts: posts.items,
-    hasErrored: posts.hasErrored,
-    isLoading: posts.isLoading,
+    hasErrored: errorsFound,
+    isLoading: isLoading,
     categories: categories.items
   };
 };

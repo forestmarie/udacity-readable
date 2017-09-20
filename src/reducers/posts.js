@@ -3,11 +3,7 @@ import {
   LIKE_POST,
   EDIT_POST,
   FETCH_POSTS_SUCCESSFUL,
-  FETCH_POSTS_HAS_ERRORED,
-  FETCH_POSTS_LOADING,
   FETCH_POSTS_BY_CATEGORY_SUCCESSFUL,
-  FETCH_POSTS_BY_CATEGORY_HAS_ERRORED,
-  FETCH_POSTS_BY_CATEGORY_LOADING,
   SORT_POSTS
 } from "../actions/posts";
 
@@ -44,35 +40,11 @@ const posts = (state = postsInitialState, action) => {
         items: [...state.filter(x => x.postId !== postId), post]
       };
 
-    case FETCH_POSTS_HAS_ERRORED:
-      return {
-        ...state,
-        hasErrored: action.hasErrored
-      };
-
-    case FETCH_POSTS_LOADING:
-      return {
-        ...state,
-        isLoading: action.isLoading
-      };
-
     case FETCH_POSTS_SUCCESSFUL:
       return {
         hasErrored: false,
         isLoading: state.isLoading,
         items: action.items
-      };
-
-    case FETCH_POSTS_BY_CATEGORY_HAS_ERRORED:
-      return {
-        ...state,
-        hasErrored: action.hasErrored
-      };
-
-    case FETCH_POSTS_BY_CATEGORY_LOADING:
-      return {
-        ...state,
-        isLoading: action.isLoading
       };
 
     case FETCH_POSTS_BY_CATEGORY_SUCCESSFUL:
