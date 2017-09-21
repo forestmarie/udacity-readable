@@ -1,82 +1,111 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchPostDetails } from "../actions/posts";
+import { Button } from "semantic-ui-react";
+import { fetchPostDetails, voteOnPost } from "../actions/posts";
 import CommentsContainer from "./CommentsContainer";
 
 class PostDetail extends Component {
-  state = {
-    postDetailsLoaded: false,
-    showComments: false
-  };
+    state = {
+        showComments: false,
+        voteChoice: "",
+        postId: this.props.match.params.id
+    };
 
-  componentDidMount() {
-    var postId = this.props.match.params.id;
-    this.props.fetchPost(`http://localhost:3001/posts/${postId}`).then(_ => {
-      this.setState({
-        postDetailsLoaded: true
-      });
-    });
-  }
-
-  showComments = e => {
-    this.setState({
-      showComments: true
-    });
-  };
-
-  render() {
-    const { currentPost } = this.props;
-
-    if (this.state.postDetailsLoaded) {
-      return (
-        <div className="ui fluid container">
-          <h2 className="ui header">{currentPost.title}</h2>
-          <div>
-            By {currentPost.author} {currentPost.timestamp} <a href="edit">edit</a> |{" "}
-            <a href="delete">delete</a>
-          </div>
-          <br />
-          <p>{currentPost.body}</p>
-          <br />
-          {!this.state.showComments && (
-            <div>
-              <button className="ui icon right labeled primary button" onClick={this.showComments}>
-                View Comments ({currentPost.voteScore}) <i className="comments icon" />
-              </button>
-            </div>
-          )}
-          <div className="ui divider" />
-          {this.state.showComments && <CommentsContainer />}
-        </div>
-      );
-    } else {
-      return <div>Post details loading...</div>;
+    componentWillMount() {
+        this.props.fetchPost(`http://localhost:3001/posts/${this.state.postId}`);
     }
-  }
+
+    showComments = e => {
+        this.setState({
+            showComments: true
+        });
+    };
+
+    upVote = e => {
+        this.setState({
+            voteChoice: "up"
+        });
+
+        this.props.vote(`http://localhost:3001/posts/${this.state.postId}`, "upVote");
+    };
+
+    downVote = e => {
+        this.setState({
+            voteChoice: "down"
+        });
+        this.props.vote(`http://localhost:3001/posts/${this.state.postId}`, "downVote");
+    };
+
+    render() {
+        const { currentPost, isLoading } = this.props;
+        const { voteChoice } = this.state;
+
+        if (currentPost) {
+            return (
+                <div className="ui fluid container">
+                    <h2 className="ui header">{currentPost.title}</h2>
+                    <div>
+                        By {currentPost.author} {currentPost.timestamp} <a href="edit">edit</a> |{" "}
+                        <a href="delete">delete</a>
+                    </div>
+                    <br />
+                    <p>{currentPost.body}</p>
+                    <br />
+                    {!this.state.showComments && (
+                        <div>
+                            <Button
+                                disabled={voteChoice === "up"}
+                                onClick={this.upVote}
+                                icon="thumbs up"
+                            />
+                            <Button
+                                disabled={voteChoice === "down"}
+                                onClick={this.downVote}
+                                icon="thumbs down"
+                            />
+                            <button
+                                className="ui icon right labeled button"
+                                onClick={this.showComments}
+                            >
+                                View Comments ({currentPost.voteScore}){" "}
+                                <i className="comments icon" />
+                            </button>
+                        </div>
+                    )}
+                    <div className="ui divider" />
+                    {this.state.showComments && <CommentsContainer />}
+                </div>
+            );
+        } else if (isLoading) {
+            return <div>Post details loading...</div>;
+        }
+        return null;
+    }
 }
 
 const mapStateToProps = ({ posts, common }) => {
-  let errorsFound = false;
-  if (common && common.errors && common.errors["fetch-post-details"]) {
-    errorsFound = true;
-  }
+    let errorsFound = false;
+    if (common && common.errors && common.errors["fetch-post-details"]) {
+        errorsFound = true;
+    }
 
-  let isLoading = false;
-  if (common && common.loading["fetch-post-details"]) {
-    isLoading = true;
-  }
+    let isLoading = false;
+    if (common && common.loading["fetch-post-details"]) {
+        isLoading = true;
+    }
 
-  return {
-    hasErrored: errorsFound,
-    isLoading: isLoading,
-    currentPost: posts.currentPost
-  };
+    return {
+        hasErrored: errorsFound,
+        isLoading: isLoading,
+        currentPost: posts.currentPost
+    };
 };
 
 const mapDispatchToProps = dispatch => {
-  return {
-    fetchPost: url => dispatch(fetchPostDetails(url))
-  };
+    return {
+        fetchPost: url => dispatch(fetchPostDetails(url)),
+        vote: (url, voteChoice) => dispatch(voteOnPost(url, voteChoice))
+    };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostDetail);
