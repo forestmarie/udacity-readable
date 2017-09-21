@@ -5,6 +5,7 @@ export const ADD_POST_SUCCESSFUL = "ADD_POST_SUCCESSFUL";
 export const LIKE_POST = "LIKE_POST";
 export const EDIT_POST = "EDIT_POST";
 export const FETCH_POSTS_SUCCESSFUL = "FETCH_POSTS_SUCCESSFUL";
+export const FETCH_POST_DETAILS_SUCCESSFUL = "FETCH_POST_DETAILS_SUCCESSFUL";
 export const FETCH_POSTS_BY_CATEGORY_SUCCESSFUL = "FETCH_POSTS_BY_CATEGORY_SUCCESSFUL";
 export const SORT_POSTS = "SORT_POSTS";
 
@@ -58,6 +59,32 @@ export function fetchPostsSuccessful(posts) {
   return {
     type: FETCH_POSTS_SUCCESSFUL,
     items: posts
+  };
+}
+
+export function fetchPostDetailsSuccessful(post) {
+  return {
+    type: FETCH_POST_DETAILS_SUCCESSFUL,
+    post
+  };
+}
+
+export function fetchPostDetails(url) {
+  const action = "fetch-post-details";
+
+  return dispatch => {
+    dispatch(fetchLoading(action, true));
+
+    return fetch(url, { headers: baseFetchHeaders })
+      .then(response => {
+        dispatch(fetchLoading(action, false));
+        return response;
+      })
+      .then(response => response.json())
+      .then(post => dispatch(fetchPostDetailsSuccessful(post)))
+      .catch(error => {
+        dispatch(fetchErrored(action));
+      });
   };
 }
 

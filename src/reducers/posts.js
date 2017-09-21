@@ -3,6 +3,7 @@ import {
   LIKE_POST,
   EDIT_POST,
   FETCH_POSTS_SUCCESSFUL,
+  FETCH_POST_DETAILS_SUCCESSFUL,
   FETCH_POSTS_BY_CATEGORY_SUCCESSFUL,
   SORT_POSTS
 } from "../actions/posts";
@@ -45,6 +46,12 @@ const posts = (state = postsInitialState, action) => {
         hasErrored: false,
         isLoading: state.isLoading,
         items: action.items
+      };
+
+    case FETCH_POST_DETAILS_SUCCESSFUL:
+      return {
+        ...state,
+        currentPost: action.post
       };
 
     case FETCH_POSTS_BY_CATEGORY_SUCCESSFUL:

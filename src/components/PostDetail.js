@@ -1,55 +1,82 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { fetchPostDetails } from "../actions/posts";
 import CommentsContainer from "./CommentsContainer";
 
 class PostDetail extends Component {
+  state = {
+    postDetailsLoaded: false,
+    showComments: false
+  };
+
+  componentDidMount() {
+    var postId = this.props.match.params.id;
+    this.props.fetchPost(`http://localhost:3001/posts/${postId}`).then(_ => {
+      this.setState({
+        postDetailsLoaded: true
+      });
+    });
+  }
+
+  showComments = e => {
+    this.setState({
+      showComments: true
+    });
+  };
+
   render() {
-    return (
-      <div>
+    const { currentPost } = this.props;
+
+    if (this.state.postDetailsLoaded) {
+      return (
         <div className="ui fluid container">
-          <h2 className="ui header">Drew Brees Passes for 600 Yards Against Vikings</h2>
+          <h2 className="ui header">{currentPost.title}</h2>
           <div>
-            By Forest Marie August 31st 2017, 9:15 AM <a href="edit">edit</a> |{" "}
+            By {currentPost.author} {currentPost.timestamp} <a href="edit">edit</a> |{" "}
             <a href="delete">delete</a>
           </div>
           <br />
-          <p>
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
-            dolor. Aenean massa strong. Cum sociis natoque penatibus et magnis dis parturient
-            montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu,
-            pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel,
-            aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis
-            vitae, justo. Nullam dictum felis eu pede link mollis pretium. Integer tincidunt. Cras
-            dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo
-            ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus
-            in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet.
-            Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper
-            ultricies nisi.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
-            dolor. Aenean massa strong. Cum sociis natoque penatibus et magnis dis parturient
-            montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu,
-            pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel,
-            aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis
-            vitae, justo. Nullam dictum felis eu pede link mollis pretium. Integer tincidunt. Cras
-            dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo
-            ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus
-            in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet.
-            Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper
-            ultricies nisi.
-          </p>
+          <p>{currentPost.body}</p>
+          <br />
+          {!this.state.showComments && (
+            <div>
+              <button className="ui icon right labeled primary button" onClick={this.showComments}>
+                View Comments ({currentPost.voteScore}) <i className="comments icon" />
+              </button>
+            </div>
+          )}
+          <div className="ui divider" />
+          {this.state.showComments && <CommentsContainer />}
         </div>
-        <br />
-        <div>
-          <button className="ui icon right labeled primary button">
-            View Comments (358) <i className="comments icon" />
-          </button>
-        </div>
-        <div className="ui divider" />
-        <CommentsContainer />
-      </div>
-    );
+      );
+    } else {
+      return <div>Post details loading...</div>;
+    }
   }
 }
 
-export default PostDetail;
+const mapStateToProps = ({ posts, common }) => {
+  let errorsFound = false;
+  if (common && common.errors && common.errors["fetch-post-details"]) {
+    errorsFound = true;
+  }
+
+  let isLoading = false;
+  if (common && common.loading["fetch-post-details"]) {
+    isLoading = true;
+  }
+
+  return {
+    hasErrored: errorsFound,
+    isLoading: isLoading,
+    currentPost: posts.currentPost
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchPost: url => dispatch(fetchPostDetails(url))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PostDetail);
