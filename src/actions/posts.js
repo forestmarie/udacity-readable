@@ -3,6 +3,8 @@ import { baseFetchHeaders } from "../utils/http-helpers";
 import { fetchErrored, fetchLoading } from "./common";
 
 export const ADD_POST_SUCCESSFUL = "ADD_POST_SUCCESSFUL";
+export const EDIT_POST_SUCCESSFUL = "EDIT_POST_SUCCESSFUL";
+
 export const VOTE_ON_POST_SUCCESSFUL = "VOTE_ON_POST_SUCCESSFUL";
 export const EDIT_POST = "EDIT_POST";
 export const FETCH_POSTS_SUCCESSFUL = "FETCH_POSTS_SUCCESSFUL";
@@ -32,6 +34,36 @@ export function addPostData(url, post) {
     })
       .then(response => {
         dispatch(addPostSuccessful(addPostRequest));
+        return response;
+      })
+      .catch(error => {
+        alert(error);
+      });
+  };
+}
+
+export function editPostSuccessful(post) {
+  return {
+    type: EDIT_POST_SUCCESSFUL,
+    post: post
+  };
+}
+
+export function editPost({ id, title, body }) {
+  let editPostRequest = {
+    title: title,
+    body: body
+  };
+
+  return dispatch => {
+    return fetch(`http://localhost:3001/posts/${id}`, {
+      headers: baseFetchHeaders,
+      method: "PUT",
+      body: JSON.stringify(editPostRequest)
+    })
+      .then(response => {
+        toastr.info("Post was successfully updated");
+        dispatch(editPostSuccessful(editPostRequest));
         return response;
       })
       .catch(error => {
@@ -70,16 +102,6 @@ export function voteOnPost(url, vote) {
   };
 }
 
-export function editPost({ author, title, body, postId }) {
-  return {
-    type: EDIT_POST,
-    author,
-    title,
-    body,
-    postId
-  };
-}
-
 export function fetchPostsSuccessful(posts) {
   return {
     type: FETCH_POSTS_SUCCESSFUL,
@@ -94,13 +116,13 @@ export function fetchPostDetailsSuccessful(post) {
   };
 }
 
-export function fetchPostDetails(url) {
+export function fetchPostDetails(id) {
   const action = "fetch-post-details";
 
   return dispatch => {
     dispatch(fetchLoading(action, true));
 
-    return fetch(url, { headers: baseFetchHeaders })
+    return fetch(`http://localhost:3001/posts/${id}`, { headers: baseFetchHeaders })
       .then(response => {
         dispatch(fetchLoading(action, false));
         if (response.ok) {
@@ -111,6 +133,7 @@ export function fetchPostDetails(url) {
       .then(post => {
         dispatch(fetchErrored(action, false));
         dispatch(fetchPostDetailsSuccessful(post));
+        return post;
       })
       .catch(error => {
         dispatch(fetchErrored(action, true));

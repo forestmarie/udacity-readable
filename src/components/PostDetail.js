@@ -12,7 +12,7 @@ class PostDetail extends Component {
   };
 
   componentWillMount() {
-    this.props.fetchPost(`http://localhost:3001/posts/${this.state.postId}`);
+    this.props.fetchPost(this.state.postId);
   }
 
   showComments = e => {
@@ -36,6 +36,10 @@ class PostDetail extends Component {
     this.props.vote(`http://localhost:3001/posts/${this.state.postId}`, "downVote");
   };
 
+  goToEditPost = () => {
+    this.props.history.push(`/posts/${this.state.postId}/edit/`);
+  };
+
   deletePost = () => {
     this.props.deletePost(this.state.postId).then(_ => {
       this.props.history.push("/posts");
@@ -52,7 +56,7 @@ class PostDetail extends Component {
           <h2 className="ui header">{currentPost.title}</h2>
           <div>
             By {currentPost.author} {currentPost.timestamp}
-            <Button content="Edit" icon="file" labelPosition="right" />
+            <Button content="Edit" onClick={this.goToEditPost} icon="file" labelPosition="right" />
             <Button content="Delete" onClick={this.deletePost} icon="trash" labelPosition="right" />
           </div>
           <br />
@@ -100,7 +104,7 @@ const mapStateToProps = ({ posts, common }) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchPost: url => dispatch(fetchPostDetails(url)),
+    fetchPost: postId => dispatch(fetchPostDetails(postId)),
     vote: (url, voteChoice) => dispatch(voteOnPost(url, voteChoice)),
     deletePost: url => dispatch(deletePost(url))
   };

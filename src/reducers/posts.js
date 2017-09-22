@@ -1,6 +1,6 @@
 import {
   ADD_POST_SUCCESSFUL,
-  EDIT_POST,
+  EDIT_POST_SUCCESSFUL,
   FETCH_POSTS_SUCCESSFUL,
   FETCH_POST_DETAILS_SUCCESSFUL,
   FETCH_POSTS_BY_CATEGORY_SUCCESSFUL,
@@ -14,8 +14,6 @@ const postsInitialState = {
 };
 
 const posts = (state = postsInitialState, action) => {
-  const { author, title, body, postId, voteScore } = action;
-
   switch (action.type) {
     case ADD_POST_SUCCESSFUL:
       return {
@@ -23,17 +21,15 @@ const posts = (state = postsInitialState, action) => {
         items: [...state.items, action.post]
       };
 
-    case EDIT_POST:
-      let posts = state.filter(x => x.postId !== postId);
+    case EDIT_POST_SUCCESSFUL:
       return {
-        isLoading: state.isLoading,
-        hasErrored: state.hasErrored,
-        items: [...posts, { author, title, body, postId }]
+        ...state,
+        currentPost: { ...currentPost, title: action.title, body: action.body }
       };
 
     case VOTE_ON_POST_SUCCESSFUL:
       const { currentPost } = state;
-      let newVoteScore = currentPost.voteScore + voteScore;
+      let newVoteScore = currentPost.voteScore + action.voteScore;
 
       return {
         ...state,
