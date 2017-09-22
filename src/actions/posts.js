@@ -103,12 +103,17 @@ export function fetchPostDetails(url) {
     return fetch(url, { headers: baseFetchHeaders })
       .then(response => {
         dispatch(fetchLoading(action, false));
-        return response;
+        if (response.ok) {
+          return response;
+        }
       })
       .then(response => response.json())
-      .then(post => dispatch(fetchPostDetailsSuccessful(post)))
+      .then(post => {
+        dispatch(fetchErrored(action, false));
+        dispatch(fetchPostDetailsSuccessful(post));
+      })
       .catch(error => {
-        dispatch(fetchErrored(action));
+        dispatch(fetchErrored(action, true));
       });
   };
 }

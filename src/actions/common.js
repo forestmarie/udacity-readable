@@ -1,10 +1,11 @@
 export const FETCH_LOADING = "FETCH_LOADING";
 export const FETCH_ERRORED = "FETCH_ERRORED";
 
-export function fetchErrored(action) {
+export function fetchErrored(action, errorsFound) {
   return {
     type: FETCH_ERRORED,
-    name: action
+    name: action,
+    errorsFound
   };
 }
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Form, Dropdown } from "semantic-ui-react";
+import { Button, Dropdown } from "semantic-ui-react";
 import { connect } from "react-redux";
 import toastr from "toastr";
 import { addPostData } from "../actions/posts";
@@ -69,9 +69,7 @@ class AddPost extends Component {
           />
         </div>
 
-        <button className="ui icon right labeled primary button">
-          Add Post<i className="add icon" />
-        </button>
+        <Button primary content="Add Post" icon="add" labelPosition="right" />
       </form>
     );
   }

@@ -9,6 +9,7 @@ const common = (state = commonInitialState, action) => {
   switch (action.type) {
     case FETCH_LOADING:
       return {
+        ...state,
         loading: {
           [action.name]: action.isLoading
         }
@@ -16,8 +17,9 @@ const common = (state = commonInitialState, action) => {
 
     case FETCH_ERRORED:
       return {
-        loading: {
-          [action.name]: action.hasErrored
+        ...state,
+        errors: {
+          [action.name]: action.errorsFound
         }
       };
 

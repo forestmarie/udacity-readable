@@ -43,7 +43,7 @@ class PostDetail extends Component {
   };
 
   render() {
-    const { currentPost, isLoading } = this.props;
+    const { currentPost, isLoading, hasErrored } = this.props;
     const { voteChoice } = this.state;
 
     if (currentPost) {
@@ -73,6 +73,8 @@ class PostDetail extends Component {
       );
     } else if (isLoading) {
       return <div>Post details loading...</div>;
+    } else if (hasErrored) {
+      return <div>There was a problem loading the post</div>;
     }
     return null;
   }
