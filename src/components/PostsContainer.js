@@ -3,11 +3,11 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Card, Message } from "semantic-ui-react";
 import moment from "moment";
-import { postsFetchData, postsByCategoryFetchData, sortPosts } from "../actions/posts";
+import { fetchPosts, fetchPostsByCategory, sortPosts } from "../actions/posts";
 
 class PostsContainer extends Component {
   componentDidMount() {
-    this.props.fetchPosts("http://localhost:3001/posts");
+    this.props.fetchPosts();
   }
 
   constructor() {
@@ -32,9 +32,9 @@ class PostsContainer extends Component {
     });
 
     if (category !== "All") {
-      this.props.fetchPostsByCategory(`http://localhost:3001/${category}/posts`);
+      this.props.fetchPostsByCategory(category);
     } else {
-      this.props.fetchPosts("http://localhost:3001/posts");
+      this.props.fetchPosts();
     }
   };
 
@@ -190,8 +190,8 @@ const mapStateToProps = ({ posts, categories, common }) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchPosts: url => dispatch(postsFetchData(url)),
-    fetchPostsByCategory: url => dispatch(postsByCategoryFetchData(url)),
+    fetchPosts: () => dispatch(fetchPosts()),
+    fetchPostsByCategory: category => dispatch(fetchPostsByCategory(category)),
     sortPosts: filter => dispatch(sortPosts(filter))
   };
 };

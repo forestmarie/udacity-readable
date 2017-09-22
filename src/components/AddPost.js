@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Button, Dropdown } from "semantic-ui-react";
 import { connect } from "react-redux";
 import toastr from "toastr";
-import { addPostData } from "../actions/posts";
+import { addPost } from "../actions/posts";
 import generateUUID from "../utils";
 
 class AddPost extends Component {
@@ -22,7 +22,7 @@ class AddPost extends Component {
       category: this.state.category
     };
 
-    this.props.addPost("http://localhost:3001/posts", post).then(() => {
+    this.props.addPost(post).then(() => {
       toastr.info("Post was added successfully!");
       document.getElementById("addForm").reset();
     });
@@ -91,7 +91,7 @@ const mapStateToProps = ({ categories }) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addPost: (url, post) => dispatch(addPostData(url, post))
+    addPost: post => dispatch(addPost(post))
   };
 };
 

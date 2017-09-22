@@ -20,14 +20,14 @@ export function addPostSuccessful(post) {
   };
 }
 
-export function addPostData(url, post) {
+export function addPost(post) {
   let addPostRequest = {
     ...post,
     timestamp: Date.now()
   };
 
   return dispatch => {
-    return fetch(url, {
+    return fetch("http://localhost:3001/posts", {
       headers: baseFetchHeaders,
       method: "POST",
       body: JSON.stringify(addPostRequest)
@@ -80,12 +80,12 @@ export function voteOnPostSuccessful(post, vote) {
   };
 }
 
-export function voteOnPost(url, vote) {
+export function voteOnPost(postId, vote) {
   const action = "vote-on-post";
   return dispatch => {
     dispatch(fetchLoading(action, true));
 
-    return fetch(url, {
+    return fetch(`http://localhost:3001/posts/${postId}`, {
       headers: baseFetchHeaders,
       method: "POST",
       body: JSON.stringify({ option: vote })
@@ -141,13 +141,13 @@ export function fetchPostDetails(id) {
   };
 }
 
-export function postsFetchData(url, category = null) {
-  const action = "posts";
+export function fetchPosts() {
+  const action = "fetch-posts";
 
   return dispatch => {
     dispatch(fetchLoading(action, true));
 
-    return fetch(url, { headers: baseFetchHeaders })
+    return fetch("http://localhost:3001/posts", { headers: baseFetchHeaders })
       .then(response => {
         dispatch(fetchLoading(action, false));
         return response;
@@ -206,13 +206,13 @@ export function fetchPostsByCategorySuccessful(posts) {
   };
 }
 
-export function postsByCategoryFetchData(url) {
+export function fetchPostsByCategory(category) {
   const action = "posts-by-category";
 
   return dispatch => {
     dispatch(fetchLoading(action, true));
 
-    fetch(url, { headers: baseFetchHeaders })
+    fetch(`http://localhost:3001/${category}/posts`, { headers: baseFetchHeaders })
       .then(response => {
         dispatch(fetchLoading(action, false));
         return response;

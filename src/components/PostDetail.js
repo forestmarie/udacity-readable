@@ -26,14 +26,14 @@ class PostDetail extends Component {
       voteChoice: "up"
     });
 
-    this.props.vote(`http://localhost:3001/posts/${this.state.postId}`, "upVote");
+    this.props.vote(this.state.postId, "upVote");
   };
 
   downVote = e => {
     this.setState({
       voteChoice: "down"
     });
-    this.props.vote(`http://localhost:3001/posts/${this.state.postId}`, "downVote");
+    this.props.vote(this.state.postId, "downVote");
   };
 
   goToEditPost = () => {
@@ -105,8 +105,8 @@ const mapStateToProps = ({ posts, common }) => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchPost: postId => dispatch(fetchPostDetails(postId)),
-    vote: (url, voteChoice) => dispatch(voteOnPost(url, voteChoice)),
-    deletePost: url => dispatch(deletePost(url))
+    vote: (postId, voteChoice) => dispatch(voteOnPost(postId, voteChoice)),
+    deletePost: postId => dispatch(deletePost(postId))
   };
 };
 
