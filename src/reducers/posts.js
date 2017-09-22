@@ -24,7 +24,7 @@ const posts = (state = postsInitialState, action) => {
     case EDIT_POST_SUCCESSFUL:
       return {
         ...state,
-        currentPost: { ...currentPost, title: action.title, body: action.body }
+        currentPost: { ...state.currentPost, title: action.title, body: action.body }
       };
 
     case VOTE_ON_POST_SUCCESSFUL:

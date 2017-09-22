@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { Button, Dropdown } from "semantic-ui-react";
+import { Button } from "semantic-ui-react";
 import { connect } from "react-redux";
-import toastr from "toastr";
 import { editPost, fetchPostDetails } from "../actions/posts";
 
 class EditPost extends Component {
