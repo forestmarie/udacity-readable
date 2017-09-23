@@ -1,25 +1,24 @@
 import { baseFetchHeaders } from "../utils/http-helpers";
 import { fetchErrored, fetchLoading } from "./common";
 import toastr from "toastr";
-export const ADD_COMMENT_SUCCESSFUL = "ADD_COMMENT";
-export const VOTE_ON_COMMENT = "VOTE_ON_COMMENT";
-export const EDIT_COMMENT = "EDIT_COMMENT";
-export const FETCH_COMMENTS_SUCCESSFUL = "FETCH_COMMENTS_SUCCESSFUL";
+export const ADD = "ADD";
+export const DELETE = "DELETE";
+export const VOTE = "VOTE";
+export const EDIT = "EDIT";
+export const FETCH = "FETCH";
 
-export function addCommentSuccessful(comment) {
+export function addSuccessful(comment) {
   return {
-    type: ADD_COMMENT_SUCCESSFUL,
+    type: ADD,
     comment: comment
   };
 }
 
 export function addComment(postId, comment) {
-  const action = "add-comment";
-
   return dispatch => {
-    dispatch(fetchLoading(action, true));
+    dispatch(fetchLoading(ADD, true));
 
-    let addCommentRequest = {
+    let request = {
       ...comment,
       parentId: postId
     };
@@ -27,43 +26,64 @@ export function addComment(postId, comment) {
     return fetch("http://localhost:3001/comments", {
       headers: baseFetchHeaders,
       method: "POST",
-      body: JSON.stringify(addCommentRequest)
+      body: JSON.stringify(request)
     })
       .then(response => {
-        dispatch(fetchLoading(action, false));
+        dispatch(fetchLoading(ADD, false));
         return response;
       })
       .then(response => response.json())
       .then(comment => {
-        dispatch(addCommentSuccessful(comment));
+        dispatch(addSuccessful(comment));
         toastr.info("Comment added successfully");
       })
       .catch(error => {
         console.error(error);
-        dispatch(fetchErrored(action));
+        dispatch(fetchErrored(ADD));
       });
   };
 }
 
-export function voteOnCommentSuccessful(commentId, choice) {
+export function voteSuccessful(commentId, choice) {
   return {
-    type: VOTE_ON_COMMENT,
+    type: VOTE,
     commentId,
     choice
   };
 }
 
-export function deleteComment() {}
+export function deleteSuccessful(commentId) {
+  return {
+    type: DELETE,
+    commentId
+  };
+}
+
+export function deleteComment(commentId) {
+  return dispatch => {
+    dispatch(fetchLoading(DELETE, true));
+
+    return fetch(`http://localhost:3001/comments/${commentId}`, {
+      headers: baseFetchHeaders,
+      method: "DELETE"
+    })
+      .then(response => {
+        dispatch(fetchLoading(DELETE, false));
+        return response;
+      })
+      .then(response => response.json())
+      .then(() => dispatch(deleteSuccessful(commentId)))
+      .catch(error => dispatch(fetchErrored(DELETE)));
+  };
+}
 
 export function vote(commentId, choice) {
-  const action = "vote-on-comment";
-
   let request = {
     option: choice
   };
 
   return dispatch => {
-    dispatch(fetchLoading(action, true));
+    dispatch(fetchLoading(VOTE, true));
 
     return fetch(`http://localhost:3001/comments/${commentId}`, {
       headers: baseFetchHeaders,
@@ -71,44 +91,33 @@ export function vote(commentId, choice) {
       body: JSON.stringify(request)
     })
       .then(response => {
-        dispatch(fetchLoading(action, false));
+        dispatch(fetchLoading(VOTE, false));
         return response;
       })
       .then(response => response.json())
-      .then(() => dispatch(voteOnCommentSuccessful(commentId, choice)))
-      .catch(error => dispatch(fetchErrored(action)));
+      .then(() => dispatch(voteSuccessful(commentId, choice)))
+      .catch(error => dispatch(fetchErrored(VOTE)));
   };
 }
 
-export function editComment({ author, body, commentId }) {
+export function fetchSuccessful(comments) {
   return {
-    type: EDIT_COMMENT,
-    author,
-    body,
-    commentId
-  };
-}
-
-export function fetchCommentsSuccessful(comments) {
-  return {
-    type: FETCH_COMMENTS_SUCCESSFUL,
+    type: FETCH,
     comments
   };
 }
 
 export function fetchComments(postId) {
-  const action = "fetch-comments";
-
   return dispatch => {
-    dispatch(fetchLoading(action, true));
+    dispatch(fetchLoading(FETCH, true));
 
     return fetch(`http://localhost:3001/posts/${postId}/comments`, { headers: baseFetchHeaders })
       .then(response => {
-        dispatch(fetchLoading(action, false));
+        dispatch(fetchLoading(FETCH, false));
         return response;
       })
       .then(response => response.json())
-      .then(comments => dispatch(fetchCommentsSuccessful(comments)))
-      .catch(error => dispatch(fetchErrored(action)));
+      .then(comments => dispatch(fetchSuccessful(comments)))
+      .catch(error => dispatch(fetchErrored(FETCH)));
   };
 }
