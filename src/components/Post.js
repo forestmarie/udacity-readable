@@ -62,16 +62,17 @@ class Post extends Component {
           <br />
           <p>{currentPost.body}</p>
           <br />
-          {!this.state.showComments && (
-            <div>
-              <Button disabled={voteChoice === "up"} onClick={this.upVote} icon="thumbs up" />
-              <Button disabled={voteChoice === "down"} onClick={this.downVote} icon="thumbs down" />
+          <div>
+            <Button disabled={voteChoice === "up"} onClick={this.upVote} icon="thumbs up" />
+            <Button disabled={voteChoice === "down"} onClick={this.downVote} icon="thumbs down" />
+            <span style={{ "font-size": "11" }}>{currentPost.voteScore} likes</span> &nbsp;
+            {!this.state.showComments && (
               <button className="ui icon right labeled button" onClick={this.showComments}>
                 View Comments <i className="comments icon" />
               </button>
-            </div>
-          )}
-          <div className="ui divider" />
+            )}
+          </div>
+          <br />
           {this.state.showComments && <CommentsContainer postId={this.state.postId} />}
         </div>
       );
