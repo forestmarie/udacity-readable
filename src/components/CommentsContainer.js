@@ -4,8 +4,13 @@ import { Button } from "semantic-ui-react";
 import Comment from "./Comment";
 import { addComment, fetchComments } from "../actions/comments";
 import generateUUID from "../utils";
+import auth from "../services/auth";
 
 class CommentsContainer extends Component {
+  state = {
+    commentBody: ""
+  };
+
   componentDidMount() {
     this.props.fetchComments(this.props.postId);
   }
@@ -13,13 +18,23 @@ class CommentsContainer extends Component {
   addComment = () => {
     let comment = {
       id: generateUUID(),
-      body: "Great post",
-      author: "Forest Marie",
+      body: this.commentBody.value,
+      author: auth.fullName,
       parentId: this.props.postId,
       timestamp: Date.now()
     };
 
+    this.setState({
+      commentBody: ""
+    });
+
     this.props.addComment(this.props.postId, comment);
+  };
+
+  handleChange = e => {
+    this.setState({
+      commentBody: e.target.innerHtml
+    });
   };
 
   _renderComments() {
@@ -39,7 +54,14 @@ class CommentsContainer extends Component {
     return (
       <div>
         <div className="ui form">
-          <textarea rows="3" placeholder="Add Comment" />
+          <textarea
+            rows="3"
+            value={this.state.commentBody}
+            onChange={this.handleChange}
+            rows="3"
+            ref={input => (this.commentBody = input)}
+            placeholder="Add Comment"
+          />
           <br />
           <br />
           <Button

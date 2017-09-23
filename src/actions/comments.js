@@ -1,13 +1,12 @@
 import { baseFetchHeaders } from "../utils/http-helpers";
 import { fetchErrored, fetchLoading } from "./common";
-
+import toastr from "toastr";
 export const ADD_COMMENT_SUCCESSFUL = "ADD_COMMENT";
 export const LIKE_COMMENT = "LIKE_COMMENT";
 export const EDIT_COMMENT = "EDIT_COMMENT";
 export const FETCH_COMMENTS_SUCCESSFUL = "FETCH_COMMENTS_SUCCESSFUL";
 
 export function addCommentSuccessful(comment) {
-  debugger;
   return {
     type: ADD_COMMENT_SUCCESSFUL,
     comment: comment
@@ -37,6 +36,7 @@ export function addComment(postId, comment) {
       .then(response => response.json())
       .then(comment => {
         dispatch(addCommentSuccessful(comment));
+        toastr.info("Comment added successfully");
       })
       .catch(error => {
         console.error(error);
