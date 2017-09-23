@@ -42,7 +42,13 @@ class CommentsContainer extends Component {
       return (
         <div className="ui cards">
           {this.props.comments.map(x => (
-            <Comment key={x.id} author={x.author} body={x.body} commentDate={x.timestamp} />
+            <Comment
+              key={x.id}
+              author={x.author}
+              body={x.body}
+              commentDate={x.timestamp}
+              voteScore={x.voteScore}
+            />
           ))}
         </div>
       );
