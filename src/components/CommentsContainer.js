@@ -72,19 +72,22 @@ class CommentsContainer extends Component {
     }
 
     return (
-      <div className="ui cards">
-        {comments.map(x => (
-          <Comment
-            key={x.id}
-            id={x.id}
-            author={x.author}
-            body={x.body}
-            commentDate={x.timestamp}
-            voteScore={x.voteScore}
-            onDelete={this.handleDelete}
-            onVote={this.handleVote}
-          />
-        ))}
+      <div>
+        <h3>{comments.length} Comments</h3>
+        <div className="ui cards">
+          {comments.map(x => (
+            <Comment
+              key={x.id}
+              id={x.id}
+              author={x.author}
+              body={x.body}
+              commentDate={x.timestamp}
+              voteScore={x.voteScore}
+              onDelete={this.handleDelete}
+              onVote={this.handleVote}
+            />
+          ))}
+        </div>
       </div>
     );
   }
