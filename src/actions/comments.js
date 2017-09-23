@@ -44,11 +44,74 @@ export function addComment(postId, comment) {
   };
 }
 
+export function editSuccessful(commentId, timestamp) {
+  return {
+    type: EDIT,
+    commentId,
+    timestamp
+  };
+}
+
+export function editComment(commentId, body) {
+  return dispatch => {
+    dispatch(fetchLoading(EDIT, true));
+
+    let now = Date.now();
+
+    let request = {
+      timestamp: now,
+      body: body
+    };
+
+    return fetch(`http://localhost:3001/comments/${commentId}`, {
+      headers: baseFetchHeaders,
+      method: "PUT",
+      body: JSON.stringify(request)
+    })
+      .then(response => {
+        dispatch(fetchLoading(EDIT, false));
+        return response;
+      })
+      .then(response => response.json())
+      .then(comment => {
+        dispatch(editSuccessful(commentId, now));
+        toastr.info("Comment edited successfully");
+      })
+      .catch(error => {
+        console.error(error);
+        dispatch(fetchErrored(ADD));
+      });
+  };
+}
+
 export function voteSuccessful(commentId, choice) {
   return {
     type: VOTE,
     commentId,
     choice
+  };
+}
+
+export function vote(commentId, choice) {
+  let request = {
+    option: choice
+  };
+
+  return dispatch => {
+    dispatch(fetchLoading(VOTE, true));
+
+    return fetch(`http://localhost:3001/comments/${commentId}`, {
+      headers: baseFetchHeaders,
+      method: "POST",
+      body: JSON.stringify(request)
+    })
+      .then(response => {
+        dispatch(fetchLoading(VOTE, false));
+        return response;
+      })
+      .then(response => response.json())
+      .then(() => dispatch(voteSuccessful(commentId, choice)))
+      .catch(error => dispatch(fetchErrored(VOTE)));
   };
 }
 
@@ -74,29 +137,6 @@ export function deleteComment(commentId) {
       .then(response => response.json())
       .then(() => dispatch(deleteSuccessful(commentId)))
       .catch(error => dispatch(fetchErrored(DELETE)));
-  };
-}
-
-export function vote(commentId, choice) {
-  let request = {
-    option: choice
-  };
-
-  return dispatch => {
-    dispatch(fetchLoading(VOTE, true));
-
-    return fetch(`http://localhost:3001/comments/${commentId}`, {
-      headers: baseFetchHeaders,
-      method: "POST",
-      body: JSON.stringify(request)
-    })
-      .then(response => {
-        dispatch(fetchLoading(VOTE, false));
-        return response;
-      })
-      .then(response => response.json())
-      .then(() => dispatch(voteSuccessful(commentId, choice)))
-      .catch(error => dispatch(fetchErrored(VOTE)));
   };
 }
 

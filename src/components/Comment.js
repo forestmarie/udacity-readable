@@ -1,29 +1,86 @@
-import React from "react";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Card, Button } from "semantic-ui-react";
 import PropTypes from "prop-types";
 import moment from "moment";
+import { editComment } from "../actions/comments";
 
-const Comment = ({ id, author, commentDate, body, voteScore, onVote, onDelete }) => {
-  return (
-    <Card fluid>
-      <Card.Content>
-        <Card.Meta>
-          By {author}, {moment(commentDate).format("YYYY-MM-DD HH:mm")}
-        </Card.Meta>
-        <Card.Description>{body}</Card.Description>
-      </Card.Content>
-      <Card.Content extra>
-        <Button content="Edit" />
-        <Button onClick={() => onDelete(id)} content="Delete" />
-        <div className="right floated">
-          <Button onClick={() => onVote(id, "upVote")} icon="thumbs up" />
-          <Button onClick={() => onVote(id, "downVote")} icon="thumbs down" />
-          {voteScore}
+class Comment extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      editMode: false,
+      commentBody: props.body
+    };
+  }
+
+  _saveComment = () => {
+    this.props.editComment(this.props.id, this.state.commentBody).then(_ => {
+      this.setState({ editMode: false });
+    });
+  };
+
+  _commentChanged = event => {
+    this.setState({ commentBody: event.target.value });
+  };
+
+  _renderEditMode() {
+    return (
+      <form className="ui form">
+        <div className="field">
+          <textarea rows="3" onChange={this._commentChanged} value={this.state.commentBody} />
         </div>
-      </Card.Content>
-    </Card>
-  );
-};
+      </form>
+    );
+  }
+
+  render() {
+    const { id, author, commentDate, voteScore, onVote, onDelete } = this.props;
+    const { editMode, commentBody } = this.state;
+
+    return (
+      <Card fluid>
+        <Card.Content>
+          <Card.Meta>
+            By {author}, {moment(commentDate).format("YYYY-MM-DD HH:mm")}
+          </Card.Meta>
+          {!editMode && <Card.Description>{commentBody}</Card.Description>}
+          {this.state.editMode && this._renderEditMode()}
+        </Card.Content>
+        <Card.Content extra>
+          <div>
+            {!editMode && (
+              <Button
+                content="Edit"
+                onClick={() => {
+                  this.setState({ editMode: true });
+                }}
+              />
+            )}
+            {editMode && (
+              <span>
+                <Button content="Save" onClick={this._saveComment} />
+                <Button
+                  content="Cancel"
+                  onClick={() => {
+                    this.setState({ editMode: false });
+                  }}
+                />
+              </span>
+            )}
+            <Button onClick={() => onDelete(id)} content="Delete" />
+            <div className="right floated">
+              <Button onClick={() => onVote(id, "upVote")} icon="thumbs up" />
+              <Button onClick={() => onVote(id, "downVote")} icon="thumbs down" />
+              {voteScore}
+            </div>
+          </div>
+        </Card.Content>
+      </Card>
+    );
+  }
+}
 
 Comment.propTypes = {
   id: PropTypes.string.isRequired,
@@ -35,4 +92,10 @@ Comment.propTypes = {
   onDelete: PropTypes.func.isRequired
 };
 
-export default Comment;
+const mapDispatchToProps = dispatch => {
+  return {
+    editComment: body => dispatch(editComment(body))
+  };
+};
+
+export default connect(null, mapDispatchToProps)(Comment);
