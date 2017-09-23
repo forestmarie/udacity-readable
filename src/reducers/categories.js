@@ -1,33 +1,13 @@
-import {
-  FETCH_CATEGORIES_SUCCESSFUL,
-  FETCH_CATEGORIES_HAS_ERRORED,
-  FETCH_CATEGORIES_LOADING
-} from "../actions/categories";
+import { FETCH_CATEGORIES } from "../actions/categories";
 
 const categoriesInitialState = {
-  items: [],
-  hasErrored: false,
-  isLoading: false
+  items: []
 };
 
 const categories = (state = categoriesInitialState, action) => {
   switch (action.type) {
-    case FETCH_CATEGORIES_HAS_ERRORED:
+    case FETCH_CATEGORIES:
       return {
-        ...state,
-        hasErrored: action.hasErrored
-      };
-
-    case FETCH_CATEGORIES_LOADING:
-      return {
-        ...state,
-        isLoading: action.isLoading
-      };
-
-    case FETCH_CATEGORIES_SUCCESSFUL:
-      return {
-        hasErrored: false,
-        isLoading: state.isLoading,
         items: action.items
       };
 

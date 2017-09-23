@@ -2,16 +2,16 @@ import React, { Component } from "react";
 import { Route } from "react-router-dom";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import PostDetail from "./components/PostDetail";
+import Post from "./components/Post";
 import PostsContainer from "./components/PostsContainer";
 import AddPost from "./components/AddPost";
 import EditPost from "./components/EditPost";
-import { categoriesFetchData } from "./actions/categories";
+import { fetchCategories } from "./actions/categories";
 import "./App.css";
 
 class App extends Component {
   componentDidMount() {
-    this.props.fetchCategories("http://localhost:3001/categories");
+    this.props.fetchCategories();
   }
 
   render() {
@@ -24,7 +24,7 @@ class App extends Component {
           <Route exact path="/(|posts)/" component={PostsContainer} />
           <Route exact path="/posts/add" component={AddPost} />
           <Route exact path="/posts/:id/edit" component={EditPost} />
-          <Route exact path="/posts/details/:id" component={PostDetail} />
+          <Route exact path="/posts/details/:id" component={Post} />
         </div>
       </div>
     );
@@ -33,7 +33,7 @@ class App extends Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchCategories: url => dispatch(categoriesFetchData(url))
+    fetchCategories: () => dispatch(fetchCategories())
   };
 };
 

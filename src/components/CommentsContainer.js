@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Button } from "semantic-ui-react";
 import Comment from "./Comment";
+import SortFilters from "./SortFilters";
 import { addComment, fetchComments, deleteComment, vote } from "../actions/comments";
 import generateUUID from "../utils";
 import auth from "../services/auth";
@@ -22,7 +23,7 @@ class CommentsContainer extends Component {
     this.props.vote(commentId, choice);
   };
 
-  sortFilterChanged = e => {
+  handleSortFilterChanged = e => {
     e.preventDefault();
     let innerText = e.target.innerText;
     let sortFilter = innerText === "Votes" ? "voteScore" : "timestamp";
@@ -88,30 +89,6 @@ class CommentsContainer extends Component {
     );
   }
 
-  _renderSortFilters() {
-    const { sortFilter } = this.state;
-    return (
-      <div className="column">
-        Sort by&nbsp;&nbsp;
-        <div className="ui buttons">
-          <button
-            onClick={this.sortFilterChanged}
-            className={sortFilter === "timestamp" ? "ui button disabled" : "ui button"}
-          >
-            Date
-          </button>
-          <div className="or" />
-          <button
-            onClick={this.sortFilterChanged}
-            className={sortFilter === "voteScore" ? "ui button disabled" : "ui button"}
-          >
-            Votes
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   render() {
     return (
       <div>
@@ -134,7 +111,7 @@ class CommentsContainer extends Component {
           />
         </div>
         <br />
-        {this._renderSortFilters()}
+        <SortFilters filter={this.state.sortFilter} filterChanged={this.handleSortFilterChanged} />
         <br />
         {this._renderComments()}
       </div>

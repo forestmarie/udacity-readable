@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Card, Message } from "semantic-ui-react";
 import moment from "moment";
+import SortFilters from "./SortFilters";
 import { fetchPosts, fetchPostsByCategory, sortPosts } from "../actions/posts";
 
 class PostsContainer extends Component {
@@ -10,25 +11,18 @@ class PostsContainer extends Component {
     this.props.fetchPosts();
   }
 
-  constructor() {
-    super();
-    this.categoryChanged = this.categoryChanged.bind(this);
-    this.sortFilterChanged = this.sortFilterChanged.bind(this);
-    this._viewDetails = this._viewDetails.bind(this);
+  state = {
+    currentCategory: "All",
+    sortFilter: ""
+  };
 
-    this.state = {
-      currentCategory: "All",
-      currentSortFilter: ""
-    };
-  }
-
-  categoryChanged = e => {
+  _categoryChanged = e => {
     e.preventDefault();
     let category = e.target.innerText;
 
     this.setState({
       currentCategory: category,
-      currentSortFilter: ""
+      sortFilter: ""
     });
 
     if (category !== "All") {
@@ -38,21 +32,21 @@ class PostsContainer extends Component {
     }
   };
 
-  sortFilterChanged = e => {
+  _handlerSortFilterChanged = e => {
     e.preventDefault();
     let innerText = e.target.innerText;
     let sortFilter = innerText === "Votes" ? "voteScore" : "timestamp";
 
     this.setState({
-      currentSortFilter: sortFilter
+      sortFilter: sortFilter
     });
 
     this.props.sortPosts(sortFilter);
   };
 
-  _viewDetails(postId) {
+  _viewDetails = postId => {
     this.props.history.push(`/posts/details/${postId}`);
-  }
+  };
 
   _renderPosts() {
     const { posts } = this.props;
@@ -87,30 +81,6 @@ class PostsContainer extends Component {
     }
   }
 
-  _renderSortFilters() {
-    const { currentSortFilter } = this.state;
-    return (
-      <div className="column">
-        Sort by&nbsp;&nbsp;
-        <div className="ui buttons">
-          <button
-            onClick={this.sortFilterChanged}
-            className={currentSortFilter === "timestamp" ? "ui button disabled" : "ui button"}
-          >
-            Date
-          </button>
-          <div className="or" />
-          <button
-            onClick={this.sortFilterChanged}
-            className={currentSortFilter === "voteScore" ? "ui button disabled" : "ui button"}
-          >
-            Votes
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   _renderCategories() {
     const { currentCategory } = this.state;
     const { categories } = this.props;
@@ -124,7 +94,7 @@ class PostsContainer extends Component {
               <button
                 className={cat.name === currentCategory ? "ui button disabled" : "ui button"}
                 key={cat.name}
-                onClick={this.categoryChanged}
+                onClick={this._categoryChanged}
               >
                 {cat.name}
               </button>&nbsp;&nbsp;
@@ -132,7 +102,7 @@ class PostsContainer extends Component {
           ))}
         <button
           className={"All" === currentCategory ? "ui button disabled" : "ui button"}
-          onClick={this.categoryChanged}
+          onClick={this._categoryChanged}
         >
           All
         </button>
@@ -151,7 +121,10 @@ class PostsContainer extends Component {
     return (
       <div>
         <div className="ui equal width grid">
-          {this._renderSortFilters()}
+          <SortFilters
+            filter={this.state.sortFilter}
+            filterChanged={this._handlerSortFilterChanged}
+          />
           {this._renderCategories()}
           <div className="column">
             <div>

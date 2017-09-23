@@ -4,7 +4,7 @@ import { Button } from "semantic-ui-react";
 import { fetchPostDetails, voteOnPost, deletePost } from "../actions/posts";
 import CommentsContainer from "./CommentsContainer";
 
-class PostDetail extends Component {
+class Post extends Component {
   state = {
     showComments: false,
     voteChoice: "",
@@ -110,4 +110,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostDetail);
+export default connect(mapStateToProps, mapDispatchToProps)(Post);

@@ -1,37 +1,22 @@
 import { baseFetchHeaders } from "../utils/http-helpers";
+import { fetchErrored, fetchLoading } from "./common";
 
-export const FETCH_CATEGORIES_SUCCESSFUL = "FETCH_CATEGORIES_SUCCESSFUL";
-export const FETCH_CATEGORIES_HAS_ERRORED = "FETCH_CATEGORIES_HAS_ERRORED";
-export const FETCH_CATEGORIES_LOADING = "FETCH_CATEGORIES_LOADING";
-
-export function fetchCategoriesHasErrored() {
-  return {
-    type: FETCH_CATEGORIES_HAS_ERRORED,
-    hasErrored: true
-  };
-}
-
-export function fetchCategoriesLoading(isLoading) {
-  return {
-    type: FETCH_CATEGORIES_LOADING,
-    isLoading
-  };
-}
+export const FETCH_CATEGORIES = "FETCH_CATEGORIES";
 
 export function fetchCategoriesSuccessful(categories) {
   return {
-    type: FETCH_CATEGORIES_SUCCESSFUL,
+    type: FETCH_CATEGORIES,
     items: categories
   };
 }
 
-export function categoriesFetchData(url) {
+export function fetchCategories() {
   return dispatch => {
-    dispatch(fetchCategoriesLoading(true));
+    dispatch(fetchLoading(FETCH_CATEGORIES, true));
 
-    fetch(url, { headers: baseFetchHeaders })
+    return fetch("http://localhost:3001/categories", { headers: baseFetchHeaders })
       .then(response => {
-        dispatch(fetchCategoriesLoading(false));
+        dispatch(fetchLoading(FETCH_CATEGORIES, false));
         return response;
       })
       .then(response => response.json())
@@ -39,7 +24,7 @@ export function categoriesFetchData(url) {
         dispatch(fetchCategoriesSuccessful(response.categories));
       })
       .catch(error => {
-        dispatch(fetchCategoriesHasErrored());
+        dispatch(fetchErrored(FETCH_CATEGORIES));
       });
   };
 }
