@@ -38,7 +38,6 @@ export function addComment(postId, comment) {
         toastr.info("Comment added successfully");
       })
       .catch(error => {
-        console.error(error);
         dispatch(fetchErrored(ADD));
       });
   };
@@ -78,7 +77,6 @@ export function editComment(commentId, body) {
         toastr.info("Comment edited successfully");
       })
       .catch(error => {
-        console.error(error);
         dispatch(fetchErrored(ADD));
       });
   };
