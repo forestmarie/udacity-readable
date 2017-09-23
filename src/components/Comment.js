@@ -5,8 +5,10 @@ class Comment extends Component {
     return (
       <div className="ui card">
         <div className="content">
-          <div className="meta">Joe, August 31st 2017, 9:53 AM</div>
-          <div className="description">Hey man great post!</div>
+          <div className="meta">
+            {this.props.author}, {this.props.commentDate}
+          </div>
+          <div className="description">{this.props.body}</div>
         </div>
         <div className="extra content">
           <a href="edit">edit</a> | <a href="delete">delete</a> | <a href="like">like</a>

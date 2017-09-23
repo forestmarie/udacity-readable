@@ -67,12 +67,12 @@ class PostDetail extends Component {
               <Button disabled={voteChoice === "up"} onClick={this.upVote} icon="thumbs up" />
               <Button disabled={voteChoice === "down"} onClick={this.downVote} icon="thumbs down" />
               <button className="ui icon right labeled button" onClick={this.showComments}>
-                View Comments ({currentPost.voteScore}) <i className="comments icon" />
+                View Comments <i className="comments icon" />
               </button>
             </div>
           )}
           <div className="ui divider" />
-          {this.state.showComments && <CommentsContainer />}
+          {this.state.showComments && <CommentsContainer postId={this.state.postId} />}
         </div>
       );
     } else if (isLoading) {

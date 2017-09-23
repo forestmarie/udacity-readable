@@ -1,49 +1,31 @@
 import {
-  ADD_COMMENT,
+  ADD_COMMENT_SUCCESSFUL,
   LIKE_COMMENT,
   EDIT_COMMENT,
-  FETCH_COMMENTS_SUCCESSFUL,
-  FETCH_COMMENTS_HAS_ERRORED,
-  FETCH_COMMENTS_LOADING
+  FETCH_COMMENTS_SUCCESSFUL
 } from "../actions/comments";
 
 const commentsInitialState = {
-  items: [],
-  isLoading: false,
-  hasErrored: false
+  items: []
 };
 
 const comments = (state = commentsInitialState, action) => {
-  const { author, body, postId, commentId } = action;
-
   switch (action.type) {
-    case ADD_COMMENT:
-      return { ...state, items: [...state, { author, body, postId }] };
+    case ADD_COMMENT_SUCCESSFUL:
+      return { items: [...state.items, { ...action.comment }] };
 
-    case LIKE_COMMENT:
-      let comment = state.filter(x => x.commentId === commentId);
-      comment.voteCount++;
-      return { ...state, items: [...state.filter(x => x.commentId !== commentId), comment] };
+    // case LIKE_COMMENT:
+    //   let comment = state.filter(x => x.commentId === commentId);
+    //   comment.voteCount++;
+    //   return { ...state, items: [...state.filter(x => x.commentId !== commentId), comment] };
+    //
+    // case EDIT_COMMENT:
+    //   let comments = state.filter(x => x.commentId !== commentId);
+    //   return { ...state, items: [...comments, { author, body, commentId }] };
 
-    case EDIT_COMMENT:
-      let comments = state.filter(x => x.commentId !== commentId);
-      return { ...state, items: [...comments, { author, body, commentId }] };
-
-    case FETCH_COMMENTS_HAS_ERRORED:
-      return {
-        ...state,
-        hasErrored: action.hasErrored
-      };
-
-    case FETCH_COMMENTS_LOADING:
-      return {
-        ...state,
-        isLoading: action.isLoading
-      };
     case FETCH_COMMENTS_SUCCESSFUL:
       return {
-        ...state,
-        items: action.items
+        items: [...action.comments]
       };
 
     default:
