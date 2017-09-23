@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Button } from "semantic-ui-react";
 import Comment from "./Comment";
-import { addComment, fetchComments } from "../actions/comments";
+import { addComment, fetchComments, vote } from "../actions/comments";
 import generateUUID from "../utils";
 import auth from "../services/auth";
 
@@ -11,8 +11,17 @@ class CommentsContainer extends Component {
     commentBody: ""
   };
 
+  constructor() {
+    super();
+    this.handleVote = this.handleVote.bind(this);
+  }
+
   componentDidMount() {
     this.props.fetchComments(this.props.postId);
+  }
+
+  handleVote(commentId, choice) {
+    this.props.vote(commentId, choice);
   }
 
   addComment = () => {
@@ -44,10 +53,12 @@ class CommentsContainer extends Component {
           {this.props.comments.map(x => (
             <Comment
               key={x.id}
+              id={x.id}
               author={x.author}
               body={x.body}
               commentDate={x.timestamp}
               voteScore={x.voteScore}
+              onVote={this.handleVote}
             />
           ))}
         </div>
@@ -64,7 +75,6 @@ class CommentsContainer extends Component {
             rows="3"
             value={this.state.commentBody}
             onChange={this.handleChange}
-            rows="3"
             ref={input => (this.commentBody = input)}
             placeholder="Add Comment"
           />
@@ -103,7 +113,8 @@ const mapStateToProps = ({ comments }) => {
 const mapDispatchToProps = dispatch => {
   return {
     addComment: (postId, comment) => dispatch(addComment(postId, comment)),
-    fetchComments: postId => dispatch(fetchComments(postId))
+    fetchComments: postId => dispatch(fetchComments(postId)),
+    vote: (commentId, choice) => dispatch(vote(commentId, choice))
   };
 };
 

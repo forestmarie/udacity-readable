@@ -1,22 +1,24 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Card, Button } from "semantic-ui-react";
+import { vote, deleteComment } from "../actions/comments";
 
 class Comment extends Component {
-  likeComment() {
-    alert("voted up");
-  }
+  likeComment = () => {
+    this.props.onVote(this.props.id, "upVote");
+  };
 
-  dislikeComment() {
-    alert("voted down");
-  }
+  dislikeComment = () => {
+    this.props.onVote(this.props.id, "downVote");
+  };
 
-  deleteComment() {
-    alert("deleted comment");
-  }
+  deleteComment = () => {
+    this.props.deleteComment(this.props.id);
+  };
 
-  editComment() {
+  editComment = () => {
     alert("edited comment");
-  }
+  };
 
   render() {
     return (
@@ -41,4 +43,11 @@ class Comment extends Component {
   }
 }
 
-export default Comment;
+const mapDispatchToProps = dispatch => {
+  return {
+    vote: (commentId, choice) => dispatch(vote(commentId, choice)),
+    deleteComment: commentId => dispatch(deleteComment(commentId))
+  };
+};
+
+export default connect(null, mapDispatchToProps)(Comment);
