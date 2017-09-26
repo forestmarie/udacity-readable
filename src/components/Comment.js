@@ -13,6 +13,17 @@ class Comment extends Component {
       editMode: false,
       commentBody: props.body
     };
+
+    this._setEditMode = this._setEditMode.bind(this);
+    this._cancelEditMode = this._cancelEditMode.bind(this);
+  }
+
+  _setEditMode() {
+    this.setState({ editMode: true });
+  }
+
+  _cancelEditMode() {
+    this.setState({ editMode: false });
   }
 
   _saveComment = () => {
@@ -50,23 +61,11 @@ class Comment extends Component {
         </Card.Content>
         <Card.Content extra>
           <div>
-            {!editMode && (
-              <Button
-                content="Edit"
-                onClick={() => {
-                  this.setState({ editMode: true });
-                }}
-              />
-            )}
+            {!editMode && <Button content="Edit" onClick={this._setEditMode} />}
             {editMode && (
               <span>
                 <Button content="Save" onClick={this._saveComment} />
-                <Button
-                  content="Cancel"
-                  onClick={() => {
-                    this.setState({ editMode: false });
-                  }}
-                />
+                <Button content="Cancel" onClick={this._cancelEditMode} />
               </span>
             )}
             <Button onClick={() => onDelete(id)} content="Delete" />

@@ -34,6 +34,10 @@ class CommentsContainer extends Component {
   };
 
   addComment = () => {
+    if (!this.commentBody.value) {
+      alert("Comment cannot be empty");
+      return;
+    }
     let comment = {
       id: generateUUID(),
       body: this.commentBody.value,

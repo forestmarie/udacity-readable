@@ -42,9 +42,10 @@ class EditPost extends Component {
     return (
       <form className="ui form" onSubmit={this.handleSubmit}>
         <div className="field">
-          <label>Title</label>
+          <label htmlFor="title">Title</label>
           <input
             type="text"
+            name="title"
             placeholder="Title"
             value={this.state.title}
             onChange={this.handleTitleChange}
@@ -53,8 +54,9 @@ class EditPost extends Component {
         </div>
 
         <div className="field">
-          <label>Post</label>
+          <label htmlFor="body">Post</label>
           <textarea
+            name="body"
             placeholder="Body"
             value={this.state.body}
             onChange={this.handleBodyChange}

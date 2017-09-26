@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Button, Dropdown } from "semantic-ui-react";
 import { connect } from "react-redux";
-import toastr from "toastr";
 import { addPost } from "../actions/posts";
 import generateUUID from "../utils";
 
@@ -14,6 +13,10 @@ class AddPost extends Component {
   handleSubmit = e => {
     e.preventDefault();
 
+    if (!this.title.value || !this.author.value || !this.body.value || !this.state.category) {
+      alert("All fields are required to add a post");
+      return;
+    }
     const post = {
       id: generateUUID(),
       title: this.title.value,
@@ -23,7 +26,6 @@ class AddPost extends Component {
     };
 
     this.props.addPost(post).then(() => {
-      toastr.info("Post was added successfully!");
       document.getElementById("addForm").reset();
     });
   };

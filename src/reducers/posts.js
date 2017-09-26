@@ -1,11 +1,11 @@
 import {
-  ADD_POST_SUCCESSFUL,
-  EDIT_POST_SUCCESSFUL,
-  FETCH_POSTS_SUCCESSFUL,
-  FETCH_POST_DETAILS_SUCCESSFUL,
-  FETCH_POSTS_BY_CATEGORY_SUCCESSFUL,
-  DELETE_POST_SUCCESSFUL,
-  VOTE_ON_POST_SUCCESSFUL,
+  ADD_POST,
+  EDIT_POST,
+  FETCH_POSTS,
+  FETCH_POST_DETAILS,
+  FETCH_POSTS_BY_CATEGORY,
+  DELETE_POST,
+  VOTE_ON_POST,
   SORT_POSTS
 } from "../actions/posts";
 
@@ -15,19 +15,19 @@ const postsInitialState = {
 
 const posts = (state = postsInitialState, action) => {
   switch (action.type) {
-    case ADD_POST_SUCCESSFUL:
+    case ADD_POST:
       return {
         ...state,
         items: [...state.items, action.post]
       };
 
-    case EDIT_POST_SUCCESSFUL:
+    case EDIT_POST:
       return {
         ...state,
         currentPost: { ...state.currentPost, title: action.title, body: action.body }
       };
 
-    case VOTE_ON_POST_SUCCESSFUL:
+    case VOTE_ON_POST:
       const { currentPost } = state;
       let newVoteScore = currentPost.voteScore + action.voteScore;
 
@@ -36,23 +36,23 @@ const posts = (state = postsInitialState, action) => {
         currentPost: { ...state.currentPost, voteScore: newVoteScore }
       };
 
-    case DELETE_POST_SUCCESSFUL:
+    case DELETE_POST:
       return {
         items: [...state.items.filter(x => x.id !== action.postId)]
       };
 
-    case FETCH_POSTS_SUCCESSFUL:
+    case FETCH_POSTS:
       return {
         items: action.items
       };
 
-    case FETCH_POST_DETAILS_SUCCESSFUL:
+    case FETCH_POST_DETAILS:
       return {
         ...state,
         currentPost: action.post
       };
 
-    case FETCH_POSTS_BY_CATEGORY_SUCCESSFUL:
+    case FETCH_POSTS_BY_CATEGORY:
       return {
         items: action.items
       };

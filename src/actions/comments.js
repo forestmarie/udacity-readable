@@ -18,7 +18,7 @@ export function addComment(postId, comment) {
   return dispatch => {
     dispatch(fetchLoading(ADD, true));
 
-    let request = {
+    const request = {
       ...comment,
       parentId: postId
     };
@@ -55,9 +55,9 @@ export function editComment(commentId, body) {
   return dispatch => {
     dispatch(fetchLoading(EDIT, true));
 
-    let now = Date.now();
+    const now = Date.now();
 
-    let request = {
+    const request = {
       timestamp: now,
       body: body
     };
@@ -91,7 +91,7 @@ export function voteSuccessful(commentId, choice) {
 }
 
 export function vote(commentId, choice) {
-  let request = {
+  const request = {
     option: choice
   };
 
