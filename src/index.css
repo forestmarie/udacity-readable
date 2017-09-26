@@ -1,8 +1,7 @@
-@import "http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css";
 @import url("https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css");
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
 }

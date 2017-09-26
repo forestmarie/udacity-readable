@@ -1,8 +1,10 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { Button } from "semantic-ui-react";
-import { fetchPostDetails, voteOnPost, deletePost } from "../actions/posts";
+import { fetchPostDetails, voteOnPost, deletePost, FETCH_POST_DETAILS } from "../actions/posts";
 import CommentsContainer from "./CommentsContainer";
+import VoteButtons from "./VoteButtons";
 
 class Post extends Component {
     state = {
@@ -12,11 +14,7 @@ class Post extends Component {
     };
 
     componentWillMount() {
-        this.props.fetchPost(this.state.postId).then(post => {
-            if (!post) {
-                this.props.history.push("/404");
-            }
-        });
+        this.props.fetchPost(this.state.postId);
     }
 
     showComments = e => {
@@ -25,7 +23,7 @@ class Post extends Component {
         });
     };
 
-    upVote = e => {
+    handleUpvote = e => {
         this.setState({
             voteChoice: "up"
         });
@@ -33,7 +31,7 @@ class Post extends Component {
         this.props.vote(this.state.postId, "upVote");
     };
 
-    downVote = e => {
+    handleDownvote = e => {
         this.setState({
             voteChoice: "down"
         });
@@ -77,17 +75,12 @@ class Post extends Component {
                     <p>{currentPost.body}</p>
                     <br />
                     <div>
-                        <Button
-                            disabled={voteChoice === "up"}
-                            onClick={this.upVote}
-                            icon="thumbs up"
+                        <VoteButtons
+                            voteChoice={voteChoice}
+                            voteScore={currentPost.voteScore}
+                            onUpvote={this.handleUpvote}
+                            onDownvote={this.handleDownvote}
                         />
-                        <Button
-                            disabled={voteChoice === "down"}
-                            onClick={this.downVote}
-                            icon="thumbs down"
-                        />
-                        <span style={{ fontSize: "11px" }}>{currentPost.voteScore} likes</span>{" "}
                         &nbsp;
                         {!this.state.showComments && (
                             <button
@@ -105,7 +98,7 @@ class Post extends Component {
         } else if (isLoading) {
             return <div>Post details loading...</div>;
         } else if (hasErrored) {
-            return <div>There was a problem loading the post</div>;
+            return <Redirect to="/404" />;
         }
         return null;
     }
@@ -113,12 +106,12 @@ class Post extends Component {
 
 const mapStateToProps = ({ posts, common }) => {
     let errorsFound = false;
-    if (common && common.errors && common.errors["fetch-post-details"]) {
+    if (common && common.errors && common.errors[FETCH_POST_DETAILS]) {
         errorsFound = true;
     }
 
     let isLoading = false;
-    if (common && common.loading["fetch-post-details"]) {
+    if (common && common.loading[FETCH_POST_DETAILS]) {
         isLoading = true;
     }
 

@@ -28,11 +28,15 @@ const posts = (state = postsInitialState, action) => {
             };
 
         case VOTE_ON_POST:
+            debugger;
             const { currentPost } = state;
             const newVoteScore = currentPost.voteScore + action.voteScore;
 
+            const currentItem = state.items.filter(x => x.id === action.postId)[0];
+            const item = { ...currentItem, voteScore: newVoteScore };
+
             return {
-                ...state,
+                items: [...state.items.filter(x => x.id !== action.postId), currentItem],
                 currentPost: { ...state.currentPost, voteScore: newVoteScore }
             };
 

@@ -75,7 +75,8 @@ export function voteOnPostSuccessful(post, vote) {
     const voteScore = vote === "upVote" ? 1 : -1;
     return {
         type: VOTE_ON_POST,
-        voteScore
+        voteScore,
+        postId: post.id
     };
 }
 
@@ -116,18 +117,20 @@ export function fetchPostDetailsSuccessful(post) {
 
 export function fetchPostDetails(id) {
     return dispatch => {
+        dispatch(fetchErrored(FETCH_POST_DETAILS, false));
         dispatch(fetchLoading(FETCH_POST_DETAILS, true));
 
         return fetch(`http://localhost:3001/posts/${id}`, { headers: baseFetchHeaders })
             .then(response => {
-                dispatch(fetchLoading(FETCH_POST_DETAILS, false));
                 if (response.ok) {
                     return response;
+                } else {
+                    dispatch(fetchErrored(FETCH_POST_DETAILS, true));
+                    throw new Error("Post does not exist");
                 }
             })
             .then(response => response.json())
             .then(post => {
-                dispatch(fetchErrored(FETCH_POST_DETAILS, false));
                 dispatch(fetchPostDetailsSuccessful(post));
                 return post;
             })

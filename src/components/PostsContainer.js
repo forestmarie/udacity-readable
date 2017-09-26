@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Card, Message } from "semantic-ui-react";
+import { Card, Message, Button } from "semantic-ui-react";
 import moment from "moment";
 import SortFilters from "./SortFilters";
-import { fetchPosts, fetchPostsByCategory, sortPosts } from "../actions/posts";
+import { fetchPosts, fetchPostsByCategory, sortPosts, voteOnPost } from "../actions/posts";
+import VoteButtons from "./VoteButtons";
 
 class PostsContainer extends Component {
     componentDidMount() {
@@ -14,6 +15,14 @@ class PostsContainer extends Component {
     state = {
         currentCategory: "All",
         sortFilter: ""
+    };
+
+    handleUpvote = postId => {
+        this.props.vote(postId, "upVote");
+    };
+
+    handleDownvote = postId => {
+        this.props.vote(postId, "downVote");
     };
 
     _categoryChanged = e => {
@@ -50,12 +59,13 @@ class PostsContainer extends Component {
 
     _renderPosts() {
         const { posts } = this.props;
+        const { voteChoice } = this.state;
 
         if (posts && posts.length > 0) {
             return (
                 <Card.Group>
                     {posts.map(item => (
-                        <Card key={item.id} fluid onClick={() => this._viewDetails(item.id)}>
+                        <Card key={item.id} fluid>
                             <Card.Content>
                                 <Card.Header>{item.title}</Card.Header>
                                 <Card.Meta>
@@ -65,7 +75,16 @@ class PostsContainer extends Component {
                             </Card.Content>
                             <Card.Content extra>
                                 <Card.Meta>
-                                    <i className="thumbs up icon">{item.voteScore}</i>
+                                    <VoteButtons
+                                        voteScore={item.voteScore}
+                                        postId={item.id}
+                                        onUpvote={this.handleUpvote}
+                                        onDownvote={this.handleDownvote}
+                                    />
+                                    <Button
+                                        onClick={() => this._viewDetails(item.id)}
+                                        content="Detail"
+                                    />
                                 </Card.Meta>
                             </Card.Content>
                         </Card>
@@ -170,6 +189,7 @@ const mapDispatchToProps = dispatch => {
     return {
         fetchPosts: () => dispatch(fetchPosts()),
         fetchPostsByCategory: category => dispatch(fetchPostsByCategory(category)),
+        vote: (postId, voteChoice) => dispatch(voteOnPost(postId, voteChoice)),
         sortPosts: filter => dispatch(sortPosts(filter))
     };
 };

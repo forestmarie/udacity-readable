@@ -22,13 +22,27 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(reducer, composeEnhancers(applyMiddleware(thunk)));
 
+const rootEl = document.getElementById("root");
+
 ReactDOM.render(
-  <Provider store={store}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </Provider>,
-  document.getElementById("root")
+    <Provider store={store}>
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
+    </Provider>,
+    rootEl
 );
 
-registerServiceWorker();
+if (module.hot) {
+    module.hot.accept("./App", () => {
+        const NextApp = require("./App").default;
+        ReactDOM.render(
+            <Provider store={store}>
+                <BrowserRouter>
+                    <NextApp />
+                </BrowserRouter>
+            </Provider>,
+            rootEl
+        );
+    });
+}
