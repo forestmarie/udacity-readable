@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Card, Button } from "semantic-ui-react";
-import PropTypes from "prop-types";
 import moment from "moment";
+import VoteButtons from "./VoteButtons";
+import PropTypes from "prop-types";
 import { editComment } from "../actions/comments";
 
 class Comment extends Component {

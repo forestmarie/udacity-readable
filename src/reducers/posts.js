@@ -1,85 +1,83 @@
 import {
-    ADD_POST,
-    EDIT_POST,
-    FETCH_POSTS,
-    FETCH_POST_DETAILS,
-    FETCH_POSTS_BY_CATEGORY,
-    DELETE_POST,
-    VOTE_ON_POST,
-    SORT_POSTS
+  ADD_POST,
+  EDIT_POST,
+  FETCH_POSTS,
+  FETCH_POST_DETAILS,
+  FETCH_POSTS_BY_CATEGORY,
+  DELETE_POST,
+  VOTE_ON_POST,
+  SORT_POSTS
 } from "../actions/posts";
 
 const postsInitialState = {
-    items: []
+  items: []
 };
 
 const posts = (state = postsInitialState, action) => {
-    switch (action.type) {
-        case ADD_POST:
-            return {
-                ...state,
-                items: [...state.items, action.post]
-            };
+  const { items } = state;
 
-        case EDIT_POST:
-            return {
-                ...state,
-                currentPost: { ...state.currentPost, title: action.title, body: action.body }
-            };
+  switch (action.type) {
+    case ADD_POST:
+      return {
+        ...state,
+        items: [...items, action.post]
+      };
 
-        case VOTE_ON_POST:
-            debugger;
-            const { currentPost } = state;
-            const newVoteScore = currentPost.voteScore + action.voteScore;
+    case EDIT_POST:
+      return {
+        ...state,
+        currentPost: { ...state.currentPost, title: action.title, body: action.body }
+      };
 
-            const currentItem = state.items.filter(x => x.id === action.postId)[0];
-            const item = { ...currentItem, voteScore: newVoteScore };
+    case VOTE_ON_POST:
+      const currentPost = items.find(x => x.id === action.postId);
+      const index = items.findIndex(x => x.id === action.postId);
+      const newVoteScore = currentPost.voteScore + action.voteScore;
 
-            return {
-                items: [...state.items.filter(x => x.id !== action.postId), currentItem],
-                currentPost: { ...state.currentPost, voteScore: newVoteScore }
-            };
+      const item = { ...currentPost, voteScore: newVoteScore };
 
-        case DELETE_POST:
-            return {
-                items: [...state.items.filter(x => x.id !== action.postId)]
-            };
+      return {
+        items: [...items.slice(0, index), item, ...items.slice(index + 1, items.length)]
+      };
 
-        case FETCH_POSTS:
-            return {
-                items: action.items
-            };
+    case DELETE_POST:
+      return {
+        items: [...state.items.filter(x => x.id !== action.postId)]
+      };
 
-        case FETCH_POST_DETAILS:
-            return {
-                ...state,
-                currentPost: action.post
-            };
+    case FETCH_POSTS:
+      return {
+        items: action.items
+      };
 
-        case FETCH_POSTS_BY_CATEGORY:
-            return {
-                items: action.items
-            };
+    case FETCH_POST_DETAILS:
+      return {
+        items: [action.post]
+      };
 
-        case SORT_POSTS:
-            const currentPosts = [...state.items];
-            const sortKey = action.filter;
+    case FETCH_POSTS_BY_CATEGORY:
+      return {
+        items: action.items
+      };
 
-            return {
-                ...state,
-                items: currentPosts.sort((a, b) => {
-                    if (a[sortKey] < b[sortKey]) {
-                        return 1;
-                    } else if (a[sortKey] > b[sortKey]) {
-                        return -1;
-                    }
-                    return 0;
-                })
-            };
+    case SORT_POSTS:
+      const currentPosts = [...state.items];
+      const sortKey = action.filter;
 
-        default:
-            return state;
-    }
+      return {
+        items: currentPosts.sort((a, b) => {
+          if (a[sortKey] < b[sortKey]) {
+            return 1;
+          } else if (a[sortKey] > b[sortKey]) {
+            return -1;
+          }
+          return 0;
+        })
+      };
+
+    default:
+      return state;
+  }
 };
 
 export default posts;

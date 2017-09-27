@@ -3,47 +3,43 @@ import PropTypes from "prop-types";
 import { Button } from "semantic-ui-react";
 
 class VoteButtons extends Component {
-    state = {
-        voteChoice: ""
-    };
+  state = {
+    voteChoice: ""
+  };
 
-    onUpvote = () => {
-        this.setState({
-            voteChoice: "up"
-        });
-        this.props.onUpvote(this.props.postId);
-    };
+  onUpvote = () => {
+    this.setState({
+      voteChoice: "up"
+    });
+    this.props.onUpvote(this.props.postId);
+  };
 
-    onDownvote = () => {
-        this.setState({
-            voteChoice: "down"
-        });
-        this.props.onDownvote(this.props.postId);
-    };
+  onDownvote = () => {
+    this.setState({
+      voteChoice: "down"
+    });
+    this.props.onDownvote(this.props.postId);
+  };
 
-    render() {
-        const { onUpvote, onDownvote, voteScore } = this.props;
-        const { voteChoice } = this.state;
+  render() {
+    const { voteScore } = this.props;
+    const { voteChoice } = this.state;
 
-        return (
-            <span>
-                <Button disabled={voteChoice === "up"} onClick={this.onUpvote} icon="thumbs up" />
-                <Button
-                    disabled={voteChoice === "down"}
-                    onClick={this.onDownvote}
-                    icon="thumbs down"
-                />
-                <span style={{ fontSize: "11px" }}>{voteScore} likes</span>{" "}
-            </span>
-        );
-    }
+    return (
+      <span>
+        <Button disabled={voteChoice === "up"} onClick={this.onUpvote} icon="thumbs up" />
+        <Button disabled={voteChoice === "down"} onClick={this.onDownvote} icon="thumbs down" />
+        <span style={{ fontSize: "11px" }}>{voteScore} likes</span>{" "}
+      </span>
+    );
+  }
 }
 
 VoteButtons.propTypes = {
-    postId: PropTypes.string.isRequired,
-    onUpvote: PropTypes.func.isRequired,
-    onDownvote: PropTypes.func.isRequired,
-    voteScore: PropTypes.number.isRequired
+  postId: PropTypes.string.isRequired,
+  onUpvote: PropTypes.func.isRequired,
+  onDownvote: PropTypes.func.isRequired,
+  voteScore: PropTypes.number.isRequired
 };
 
 export default VoteButtons;
