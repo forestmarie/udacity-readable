@@ -1,4 +1,4 @@
-import { baseFetchHeaders } from "../utils/http-helpers";
+import { baseFetchHeaders, BaseApiUrl } from "../utils/http-helpers";
 import { fetchErrored, fetchLoading } from "./common";
 import toastr from "toastr";
 export const ADD = "ADD";
@@ -23,7 +23,7 @@ export function addComment(postId, comment) {
       parentId: postId
     };
 
-    return fetch("http://localhost:3001/comments", {
+    return fetch(`${BaseApiUrl}/comments`, {
       headers: baseFetchHeaders,
       method: "POST",
       body: JSON.stringify(request)
@@ -62,7 +62,7 @@ export function editComment(commentId, body) {
       body: body
     };
 
-    return fetch(`http://localhost:3001/comments/${commentId}`, {
+    return fetch(`${BaseApiUrl}/comments/${commentId}`, {
       headers: baseFetchHeaders,
       method: "PUT",
       body: JSON.stringify(request)
@@ -98,7 +98,7 @@ export function vote(commentId, choice) {
   return dispatch => {
     dispatch(fetchLoading(VOTE, true));
 
-    return fetch(`http://localhost:3001/comments/${commentId}`, {
+    return fetch(`${BaseApiUrl}/comments/${commentId}`, {
       headers: baseFetchHeaders,
       method: "POST",
       body: JSON.stringify(request)
@@ -124,7 +124,7 @@ export function deleteComment(commentId) {
   return dispatch => {
     dispatch(fetchLoading(DELETE, true));
 
-    return fetch(`http://localhost:3001/comments/${commentId}`, {
+    return fetch(`${BaseApiUrl}/comments/${commentId}`, {
       headers: baseFetchHeaders,
       method: "DELETE"
     })
@@ -149,7 +149,7 @@ export function fetchComments(postId) {
   return dispatch => {
     dispatch(fetchLoading(FETCH, true));
 
-    return fetch(`http://localhost:3001/posts/${postId}/comments`, { headers: baseFetchHeaders })
+    return fetch(`${BaseApiUrl}/posts/${postId}/comments`, { headers: baseFetchHeaders })
       .then(response => {
         dispatch(fetchLoading(FETCH, false));
         return response;

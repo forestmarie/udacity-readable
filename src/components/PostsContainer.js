@@ -4,8 +4,15 @@ import { Link } from "react-router-dom";
 import { Card, Message, Button } from "semantic-ui-react";
 import moment from "moment";
 import SortFilters from "./SortFilters";
-import { fetchPosts, fetchPostsByCategory, sortPosts, voteOnPost } from "../actions/posts";
+import {
+  fetchPosts,
+  fetchPostsByCategory,
+  sortPosts,
+  deletePost,
+  voteOnPost
+} from "../actions/posts";
 import VoteButtons from "./VoteButtons";
+import AdminButtons from "./AdminButtons";
 
 class PostsContainer extends Component {
   componentDidMount() {
@@ -23,6 +30,14 @@ class PostsContainer extends Component {
 
   handleDownvote = postId => {
     this.props.vote(postId, "downVote");
+  };
+
+  handleEdit = postId => {
+    this.props.history.push(`/posts/${postId}/edit/`);
+  };
+
+  handleDelete = postId => {
+    this.props.deletePost(postId);
   };
 
   _categoryChanged = e => {
@@ -78,9 +93,15 @@ class PostsContainer extends Component {
                   <VoteButtons
                     voteScore={item.voteScore}
                     postId={item.id}
-                    onUpvote={this.handleUpvote}
-                    onDownvote={this.handleDownvote}
+                    onUpvote={() => this.handleUpvote(item.id)}
+                    onDownvote={() => this.handleDownvote(item.id)}
                   />
+                  <div className="right floated">
+                    <AdminButtons
+                      onEdit={() => this.handleEdit(item.id)}
+                      onDelete={() => this.handleDelete(item.id)}
+                    />
+                  </div>
                 </Card.Meta>
               </Card.Content>
             </Card>
@@ -103,24 +124,24 @@ class PostsContainer extends Component {
 
     return (
       <div className="column">
-        Category: &nbsp;
-        {categories &&
-          categories.map(cat => (
-            <span key={cat.name}>
-              <button
+        <Button.Group>
+          {categories &&
+            categories.map(cat => (
+              <Button
+                key={cat.name}
                 className={cat.name === currentCategory ? "ui button disabled" : "ui button"}
                 onClick={this._categoryChanged}
               >
                 {cat.name}
-              </button>&nbsp;&nbsp;
-            </span>
-          ))}
-        <button
-          className={"All" === currentCategory ? "ui button disabled" : "ui button"}
-          onClick={this._categoryChanged}
-        >
-          All
-        </button>
+              </Button>
+            ))}
+          <Button
+            className={"All" === currentCategory ? "ui button disabled" : "ui button"}
+            onClick={this._categoryChanged}
+          >
+            All
+          </Button>
+        </Button.Group>
       </div>
     );
   }
@@ -181,7 +202,8 @@ const mapDispatchToProps = dispatch => {
     fetchPosts: () => dispatch(fetchPosts()),
     fetchPostsByCategory: category => dispatch(fetchPostsByCategory(category)),
     vote: (postId, voteChoice) => dispatch(voteOnPost(postId, voteChoice)),
-    sortPosts: filter => dispatch(sortPosts(filter))
+    sortPosts: filter => dispatch(sortPosts(filter)),
+    deletePost: postId => dispatch(deletePost(postId))
   };
 };
 

@@ -11,14 +11,14 @@ class VoteButtons extends Component {
     this.setState({
       voteChoice: "up"
     });
-    this.props.onUpvote(this.props.postId);
+    this.props.onUpvote();
   };
 
   onDownvote = () => {
     this.setState({
       voteChoice: "down"
     });
-    this.props.onDownvote(this.props.postId);
+    this.props.onDownvote();
   };
 
   render() {
@@ -36,7 +36,6 @@ class VoteButtons extends Component {
 }
 
 VoteButtons.propTypes = {
-  postId: PropTypes.string.isRequired,
   onUpvote: PropTypes.func.isRequired,
   onDownvote: PropTypes.func.isRequired,
   voteScore: PropTypes.number.isRequired

@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import { Button } from "semantic-ui-react";
+import moment from "moment";
 import { fetchPostDetails, voteOnPost, deletePost, FETCH_POST_DETAILS } from "../actions/posts";
 import CommentsContainer from "./CommentsContainer";
 import VoteButtons from "./VoteButtons";
+import AdminButtons from "./AdminButtons";
 
 class Post extends Component {
   state = {
@@ -39,11 +40,11 @@ class Post extends Component {
     this.props.vote(this.state.postId, "downVote");
   };
 
-  goToEditPost = () => {
+  handleEdit = () => {
     this.props.history.push(`/posts/${this.state.postId}/edit/`);
   };
 
-  deletePost = () => {
+  handleDelete = () => {
     this.props.deletePost(this.state.postId).then(_ => {
       this.props.history.push("/posts");
     });
@@ -58,16 +59,14 @@ class Post extends Component {
         <div className="ui fluid container">
           <h2 className="ui header">{post.title}</h2>
           <div>
-            By {post.author} {post.timestamp}
-            <Button content="Edit" onClick={this.goToEditPost} icon="file" labelPosition="right" />
-            <Button content="Delete" onClick={this.deletePost} icon="trash" labelPosition="right" />
+            By {post.author}, {moment(post.timestamp).format("YYYY-MM-DD HH:mm")}
+            <AdminButtons onEdit={this.handleEdit} onDelete={this.handleDelete} />
           </div>
           <br />
           <p>{post.body}</p>
           <br />
           <div>
             <VoteButtons
-              postId={post.id}
               voteScore={post.voteScore}
               onUpvote={this.handleUpvote}
               onDownvote={this.handleDownvote}

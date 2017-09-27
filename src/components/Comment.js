@@ -71,9 +71,11 @@ class Comment extends Component {
             )}
             <Button onClick={() => onDelete(id)} content="Delete" />
             <div className="right floated">
-              <Button onClick={() => onVote(id, "upVote")} icon="thumbs up" />
-              <Button onClick={() => onVote(id, "downVote")} icon="thumbs down" />
-              {voteScore}
+              <VoteButtons
+                voteScore={voteScore}
+                onUpvote={() => onVote(id, "upVote")}
+                onDownvote={() => onVote(id, "downVote")}
+              />
             </div>
           </div>
         </Card.Content>

@@ -1,4 +1,4 @@
-import { baseFetchHeaders } from "../utils/http-helpers";
+import { baseFetchHeaders, BaseApiUrl } from "../utils/http-helpers";
 import { fetchErrored, fetchLoading } from "./common";
 
 export const FETCH_CATEGORIES = "FETCH_CATEGORIES";
@@ -14,7 +14,7 @@ export function fetchCategories() {
   return dispatch => {
     dispatch(fetchLoading(FETCH_CATEGORIES, true));
 
-    return fetch("http://localhost:3001/categories", { headers: baseFetchHeaders })
+    return fetch(`${BaseApiUrl}/categories`, { headers: baseFetchHeaders })
       .then(response => {
         dispatch(fetchLoading(FETCH_CATEGORIES, false));
         return response;

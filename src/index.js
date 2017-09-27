@@ -7,7 +7,6 @@ import thunk from "redux-thunk";
 import "./index.css";
 import App from "./App";
 import reducer from "./reducers";
-import registerServiceWorker from "./registerServiceWorker";
 
 // const logger = store => next => action => {
 //   console.group(action.type);
@@ -25,24 +24,24 @@ const store = createStore(reducer, composeEnhancers(applyMiddleware(thunk)));
 const rootEl = document.getElementById("root");
 
 ReactDOM.render(
-    <Provider store={store}>
-        <BrowserRouter>
-            <App />
-        </BrowserRouter>
-    </Provider>,
-    rootEl
+  <Provider store={store}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </Provider>,
+  rootEl
 );
 
 if (module.hot) {
-    module.hot.accept("./App", () => {
-        const NextApp = require("./App").default;
-        ReactDOM.render(
-            <Provider store={store}>
-                <BrowserRouter>
-                    <NextApp />
-                </BrowserRouter>
-            </Provider>,
-            rootEl
-        );
-    });
+  module.hot.accept("./App", () => {
+    const NextApp = require("./App").default;
+    ReactDOM.render(
+      <Provider store={store}>
+        <BrowserRouter>
+          <NextApp />
+        </BrowserRouter>
+      </Provider>,
+      rootEl
+    );
+  });
 }
