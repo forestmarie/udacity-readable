@@ -1,56 +1,56 @@
 import { ADD, VOTE, DELETE, EDIT, FETCH } from "../actions/comments";
 
 const commentsInitialState = {
-    items: []
+  items: []
 };
 
 const comments = (state = commentsInitialState, action) => {
-    const { items } = state;
-    const { commentId, choice, timestamp } = action;
-    let index;
-    let originalComment;
+  const { items } = state;
+  const { commentId, choice, timestamp } = action;
+  let index;
+  let originalComment;
 
-    switch (action.type) {
-        case ADD:
-            return { items: [...items, { ...action.comment }] };
+  switch (action.type) {
+    case ADD:
+      return { items: [...items, { ...action.comment }] };
 
-        case DELETE:
-            index = items.findIndex(x => x.id === commentId);
+    case DELETE:
+      index = items.findIndex(x => x.id === commentId);
 
-            return {
-                items: [...items.slice(0, index), ...items.slice(index + 1, items.length)]
-            };
+      return {
+        items: [...items.slice(0, index), ...items.slice(index + 1, items.length)]
+      };
 
-        case VOTE:
-            originalComment = items.filter(x => x.id === commentId)[0];
-            index = items.findIndex(x => x.id === commentId);
+    case VOTE:
+      originalComment = items.filter(x => x.id === commentId)[0];
+      index = items.findIndex(x => x.id === commentId);
 
-            const voteScore = choice === "upVote" ? 1 : -1;
+      const voteScore = choice === "upVote" ? 1 : -1;
 
-            const comment = {
-                ...originalComment,
-                voteScore: originalComment.voteScore + voteScore
-            };
+      const comment = {
+        ...originalComment,
+        voteScore: originalComment.voteScore + voteScore
+      };
 
-            return {
-                items: [...items.slice(0, index), comment, ...items.slice(index + 1, items.length)]
-            };
+      return {
+        items: [...items.slice(0, index), comment, ...items.slice(index + 1, items.length)]
+      };
 
-        case EDIT:
-            const unmodifiedComments = items.filter(x => x.id !== commentId);
-            originalComment = items.filter(x => x.id === commentId)[0];
-            const modifiedComment = { ...originalComment, timestamp: timestamp };
+    case EDIT:
+      const unmodifiedComments = items.filter(x => x.id !== commentId);
+      originalComment = items.filter(x => x.id === commentId)[0];
+      const modifiedComment = { ...originalComment, timestamp: timestamp };
 
-            return { items: [...unmodifiedComments, modifiedComment] };
+      return { items: [...unmodifiedComments, modifiedComment] };
 
-        case FETCH:
-            return {
-                items: [...action.comments]
-            };
+    case FETCH:
+      return {
+        items: [...action.comments]
+      };
 
-        default:
-            return state;
-    }
+    default:
+      return state;
+  }
 };
 
 export default comments;
