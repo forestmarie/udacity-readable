@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import Post from "./components/Post";
-import PostsContainer from "./components/PostsContainer";
-import AddPost from "./components/AddPost";
-import EditPost from "./components/EditPost";
-import Navbar from "./components/Navbar";
-import { fetchCategories } from "./actions/categories";
+import Post from "./features/posts/Post";
+import PostsContainer from "./features/posts/PostsContainer";
+import AddPost from "./features/posts/AddPost";
+import EditPost from "./features/posts/EditPost";
+import Navbar from "./features/layout/Navbar";
+import { fetchCategories } from "./features/categories/CategoryActions";
 import "./App.css";
 
 const Error404 = () => {
@@ -45,10 +45,4 @@ class App extends Component {
     }
 }
 
-const mapDispatchToProps = dispatch => {
-    return {
-        fetchCategories: () => dispatch(fetchCategories())
-    };
-};
-
-export default withRouter(connect(null, mapDispatchToProps)(App));
+export default withRouter(connect(null, { fetchCategories })(App));

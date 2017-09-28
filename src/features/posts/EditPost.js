@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { editPost, fetchPostDetails } from "../actions/posts";
+import { editPost, fetchPostDetails } from "./PostActions";
 
 class EditPost extends Component {
     state = {

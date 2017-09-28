@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Button } from "semantic-ui-react";
 import Comment from "./Comment";
-import SortFilters from "./SortFilters";
-import { addComment, fetchComments, deleteComment, vote } from "../actions/comments";
-import generateUUID from "../utils";
-import auth from "../services/auth";
+import SortFilters from "../common/SortFilters";
+import { addComment, fetchComments, deleteComment, vote } from "./CommentActions";
+import generateUUID from "../../utils";
+import auth from "../auth/auth";
 import _ from "lodash";
 
 class CommentsContainer extends Component {

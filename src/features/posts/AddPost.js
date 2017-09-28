@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Button, Dropdown } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { addPost } from "../actions/posts";
-import generateUUID from "../utils";
+import { addPost } from "./PostActions";
+import generateUUID from "../../utils";
 
 class AddPost extends Component {
     state = {
@@ -25,9 +25,8 @@ class AddPost extends Component {
             category: this.state.category
         };
 
-        this.props.addPost(post).then(() => {
-            document.getElementById("addForm").reset();
-        });
+        this.props.addPost(post);
+        document.getElementById("addForm").reset();
     };
 
     handleCategoryChange = (e, { value }) => this.setState({ category: value });

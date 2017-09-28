@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import moment from "moment";
-import { fetchPostDetails, voteOnPost, deletePost, FETCH_POST_DETAILS } from "../actions/posts";
-import CommentsContainer from "./CommentsContainer";
-import VoteButtons from "./VoteButtons";
-import AdminButtons from "./AdminButtons";
+import { fetchPostDetails, voteOnPost, deletePost, FETCH_POST_DETAILS } from "./PostActions";
+import CommentsContainer from "../comments/CommentsContainer";
+import VoteButtons from "../common/VoteButtons";
+import AdminButtons from "../common/AdminButtons";
 
 class Post extends Component {
     state = {

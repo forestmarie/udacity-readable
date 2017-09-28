@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import { Card, Button } from "semantic-ui-react";
 import moment from "moment";
-import VoteButtons from "./VoteButtons";
-import PropTypes from "prop-types";
-import { editComment } from "../actions/comments";
+import VoteButtons from "../common/VoteButtons";
+import { editComment } from "./CommentActions";
 
 class Comment extends Component {
     constructor(props) {

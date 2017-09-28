@@ -3,16 +3,10 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Card, Message, Button } from "semantic-ui-react";
 import moment from "moment";
-import SortFilters from "./SortFilters";
-import {
-    fetchPosts,
-    fetchPostsByCategory,
-    sortPosts,
-    deletePost,
-    voteOnPost
-} from "../actions/posts";
-import VoteButtons from "./VoteButtons";
-import AdminButtons from "./AdminButtons";
+import { fetchPosts, fetchPostsByCategory, sortPosts, deletePost, voteOnPost } from "./PostActions";
+import SortFilters from "../common/SortFilters";
+import VoteButtons from "../common/VoteButtons";
+import AdminButtons from "../common/AdminButtons";
 
 class PostsContainer extends Component {
     componentDidMount() {
