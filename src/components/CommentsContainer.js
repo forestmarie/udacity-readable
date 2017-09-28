@@ -10,141 +10,137 @@ import auth from "../services/auth";
 import _ from "lodash";
 
 class CommentsContainer extends Component {
-  state = {
-    commentBody: "",
-    sortFilter: "timestamp"
-  };
-
-  componentDidMount() {
-    this.props.fetchComments(this.props.postId);
-  }
-
-  handleVote = (commentId, choice) => {
-    this.props.vote(commentId, choice);
-  };
-
-  handleSortFilterChanged = e => {
-    e.preventDefault();
-    const innerText = e.target.innerText;
-    const sortFilter = innerText === "Votes" ? "voteScore" : "timestamp";
-
-    this.setState({
-      sortFilter: sortFilter
-    });
-  };
-
-  addComment = () => {
-    if (!this.commentBody.value) {
-      alert("Comment cannot be empty");
-      return;
-    }
-    const comment = {
-      id: generateUUID(),
-      body: this.commentBody.value,
-      author: auth.fullName,
-      parentId: this.props.postId,
-      timestamp: Date.now()
+    state = {
+        commentBody: "",
+        sortFilter: "timestamp"
     };
 
-    this.setState({
-      commentBody: ""
-    });
-
-    this.props.addComment(this.props.postId, comment);
-  };
-
-  handleDelete = commentId => {
-    this.props.deleteComment(commentId);
-  };
-
-  handleChange = e => {
-    this.setState({
-      commentBody: e.target.innerHtml
-    });
-  };
-
-  _renderComments() {
-    if (this.props.comments.length === 0) {
-      return null;
+    componentDidMount() {
+        this.props.fetchComments(this.props.postId);
     }
 
-    let comments = this.props.comments;
-    if (this.state.sortFilter === "timestamp") {
-      comments = _.orderBy(comments, ["timestamp"], ["asc"]);
-    } else {
-      comments = _.orderBy(comments, ["voteScore"], ["desc"]);
+    handleVote = (commentId, choice) => {
+        this.props.vote(commentId, choice);
+    };
+
+    handleSortFilterChanged = e => {
+        e.preventDefault();
+        const innerText = e.target.innerText;
+        const sortFilter = innerText === "Votes" ? "voteScore" : "timestamp";
+
+        this.setState({
+            sortFilter: sortFilter
+        });
+    };
+
+    addComment = () => {
+        if (!this.commentBody.value) {
+            alert("Comment cannot be empty");
+            return;
+        }
+        const comment = {
+            id: generateUUID(),
+            body: this.commentBody.value,
+            author: auth.fullName,
+            parentId: this.props.postId,
+            timestamp: Date.now()
+        };
+
+        this.setState({
+            commentBody: ""
+        });
+
+        this.props.addComment(this.props.postId, comment);
+    };
+
+    handleDelete = commentId => {
+        this.props.deleteComment(commentId);
+    };
+
+    handleChange = e => {
+        this.setState({
+            commentBody: e.target.innerHtml
+        });
+    };
+
+    _renderComments() {
+        if (this.props.comments.length === 0) {
+            return null;
+        }
+
+        let comments = this.props.comments;
+        if (this.state.sortFilter === "timestamp") {
+            comments = _.orderBy(comments, ["timestamp"], ["asc"]);
+        } else {
+            comments = _.orderBy(comments, ["voteScore"], ["desc"]);
+        }
+
+        return (
+            <div>
+                <h3>{comments.length} Comments</h3>
+                <div className="ui cards">
+                    {comments.map(x => (
+                        <Comment
+                            key={x.id}
+                            id={x.id}
+                            author={x.author}
+                            body={x.body}
+                            commentDate={x.timestamp}
+                            voteScore={x.voteScore}
+                            onDelete={this.handleDelete}
+                            onVote={this.handleVote}
+                        />
+                    ))}
+                </div>
+            </div>
+        );
     }
 
-    return (
-      <div>
-        <h3>{comments.length} Comments</h3>
-        <div className="ui cards">
-          {comments.map(x => (
-            <Comment
-              key={x.id}
-              id={x.id}
-              author={x.author}
-              body={x.body}
-              commentDate={x.timestamp}
-              voteScore={x.voteScore}
-              onDelete={this.handleDelete}
-              onVote={this.handleVote}
-            />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  render() {
-    return (
-      <div>
-        <div className="ui form">
-          <textarea
-            rows="3"
-            value={this.state.commentBody}
-            onChange={this.handleChange}
-            ref={input => (this.commentBody = input)}
-            placeholder="Add Comment"
-          />
-          <br />
-          <br />
-          <Button
-            primary
-            content="Add Comment"
-            icon="add"
-            labelPosition="right"
-            onClick={() => this.addComment()}
-          />
-        </div>
-        <br />
-        <SortFilters filter={this.state.sortFilter} filterChanged={this.handleSortFilterChanged} />
-        <br />
-        {this._renderComments()}
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div>
+                <div className="ui form">
+                    <textarea
+                        rows="3"
+                        value={this.state.commentBody}
+                        onChange={this.handleChange}
+                        ref={input => (this.commentBody = input)}
+                        placeholder="Add Comment"
+                    />
+                    <br />
+                    <br />
+                    <Button
+                        primary
+                        content="Add Comment"
+                        icon="add"
+                        labelPosition="right"
+                        onClick={() => this.addComment()}
+                    />
+                </div>
+                <br />
+                <SortFilters
+                    filter={this.state.sortFilter}
+                    filterChanged={this.handleSortFilterChanged}
+                />
+                <br />
+                {this._renderComments()}
+            </div>
+        );
+    }
 }
 
 CommentsContainer.propTypes = {
-  comments: PropTypes.array.isRequired
+    comments: PropTypes.array.isRequired
 };
 
 const mapStateToProps = ({ comments }) => {
-  const items = comments.items || [];
+    const items = comments.items || [];
 
-  return {
-    comments: items
-  };
+    return {
+        comments: items
+    };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    addComment: (postId, comment) => dispatch(addComment(postId, comment)),
-    deleteComment: commentId => dispatch(deleteComment(commentId)),
-    fetchComments: postId => dispatch(fetchComments(postId)),
-    vote: (commentId, choice) => dispatch(vote(commentId, choice))
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CommentsContainer);
+export default connect(mapStateToProps, { addComment, deleteComment, fetchComments, vote })(
+    CommentsContainer
+);

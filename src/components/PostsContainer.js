@@ -5,206 +5,216 @@ import { Card, Message, Button } from "semantic-ui-react";
 import moment from "moment";
 import SortFilters from "./SortFilters";
 import {
-  fetchPosts,
-  fetchPostsByCategory,
-  sortPosts,
-  deletePost,
-  voteOnPost
+    fetchPosts,
+    fetchPostsByCategory,
+    sortPosts,
+    deletePost,
+    voteOnPost
 } from "../actions/posts";
 import VoteButtons from "./VoteButtons";
 import AdminButtons from "./AdminButtons";
 
 class PostsContainer extends Component {
-  componentDidMount() {
-    this.props.fetchPosts();
-  }
+    componentDidMount() {
+        const category = this.props.match.params.category;
+        if (!category) {
+            this.props.fetchPosts();
+        } else {
+            this.props.fetchPostsByCategory(category);
+        }
 
-  state = {
-    currentCategory: "All",
-    sortFilter: ""
-  };
-
-  handleUpvote = postId => {
-    this.props.vote(postId, "upVote");
-  };
-
-  handleDownvote = postId => {
-    this.props.vote(postId, "downVote");
-  };
-
-  handleEdit = postId => {
-    this.props.history.push(`/posts/${postId}/edit/`);
-  };
-
-  handleDelete = postId => {
-    this.props.deletePost(postId);
-  };
-
-  _categoryChanged = e => {
-    e.preventDefault();
-    const category = e.target.innerText;
-
-    this.setState({
-      currentCategory: category,
-      sortFilter: ""
-    });
-
-    if (category !== "All") {
-      this.props.fetchPostsByCategory(category);
-    } else {
-      this.props.fetchPosts();
-    }
-  };
-
-  _handlerSortFilterChanged = e => {
-    e.preventDefault();
-    const innerText = e.target.innerText;
-    const sortFilter = innerText === "Votes" ? "voteScore" : "timestamp";
-
-    this.setState({
-      sortFilter: sortFilter
-    });
-
-    this.props.sortPosts(sortFilter);
-  };
-
-  _viewDetails = postId => {
-    this.props.history.push(`/posts/details/${postId}`);
-  };
-
-  _renderPosts() {
-    const { posts } = this.props;
-
-    if (posts && posts.length > 0) {
-      return (
-        <Card.Group>
-          {posts.map(item => (
-            <Card key={item.id} fluid>
-              <Card.Content>
-                <Card.Header>
-                  <Link to={`/posts/details/${item.id}`}>{item.title}</Link>
-                </Card.Header>
-                <Card.Meta>
-                  by {item.author}, {moment(item.timestamp).format("YYYY-MM-DD HH:mm")}
-                </Card.Meta>
-              </Card.Content>
-              <Card.Content extra>
-                <Card.Meta>
-                  <VoteButtons
-                    voteScore={item.voteScore}
-                    postId={item.id}
-                    onUpvote={() => this.handleUpvote(item.id)}
-                    onDownvote={() => this.handleDownvote(item.id)}
-                  />
-                  <div className="right floated">
-                    <AdminButtons
-                      onEdit={() => this.handleEdit(item.id)}
-                      onDelete={() => this.handleDelete(item.id)}
-                    />
-                  </div>
-                </Card.Meta>
-              </Card.Content>
-            </Card>
-          ))}
-        </Card.Group>
-      );
-    } else {
-      return (
-        <Message negative>
-          <Message.Header>We&#x27;re sorry but no posts were found.</Message.Header>
-          <p>Please try a different category</p>
-        </Message>
-      );
-    }
-  }
-
-  _renderCategories() {
-    const { currentCategory } = this.state;
-    const { categories } = this.props;
-
-    return (
-      <div className="column">
-        <Button.Group>
-          {categories &&
-            categories.map(cat => (
-              <Button
-                key={cat.name}
-                className={cat.name === currentCategory ? "ui button disabled" : "ui button"}
-                onClick={this._categoryChanged}
-              >
-                {cat.name}
-              </Button>
-            ))}
-          <Button
-            className={"All" === currentCategory ? "ui button disabled" : "ui button"}
-            onClick={this._categoryChanged}
-          >
-            All
-          </Button>
-        </Button.Group>
-      </div>
-    );
-  }
-
-  render() {
-    if (this.props.hasErrored) {
-      return <p>Sorry! There was an error</p>;
-    }
-    if (this.props.isLoading) {
-      return <p>Loading...</p>;
+        this.setState({
+            currentCategory: category || "All"
+        });
     }
 
-    return (
-      <div>
-        <div className="ui equal width grid">
-          <SortFilters
-            filter={this.state.sortFilter}
-            filterChanged={this._handlerSortFilterChanged}
-          />
-          {this._renderCategories()}
-          <div className="column">
-            <div>
-              <Link to="/posts/add">
-                <button className="ui icon right labeled right floated primary button">
-                  Add New Post <i className="plus icon" />
-                </button>
-              </Link>
+    state = {
+        sortFilter: ""
+    };
+
+    handleUpvote = postId => {
+        this.props.voteOnPost(postId, "upVote");
+    };
+
+    handleDownvote = postId => {
+        this.props.voteOnPost(postId, "downVote");
+    };
+
+    handleEdit = postId => {
+        this.props.history.push(`/posts/${postId}/edit/`);
+    };
+
+    handleDelete = postId => {
+        this.props.deletePost(postId);
+    };
+
+    _categoryChanged = e => {
+        e.preventDefault();
+        const category = e.target.innerText;
+
+        this.setState({
+            sortFilter: "",
+            currentCategory: category
+        });
+
+        if (category !== "All") {
+            this.props.fetchPostsByCategory(category);
+            this.props.history.push(`/posts/${category}`);
+        } else {
+            this.props.history.push("/posts");
+        }
+    };
+
+    _handlerSortFilterChanged = e => {
+        e.preventDefault();
+        const innerText = e.target.innerText;
+        const sortFilter = innerText === "Votes" ? "voteScore" : "timestamp";
+
+        this.setState({
+            sortFilter: sortFilter
+        });
+
+        this.props.sortPosts(sortFilter);
+    };
+
+    _viewDetails = postId => {
+        this.props.history.push(`/posts/details/${postId}`);
+    };
+
+    _renderPosts() {
+        const { posts } = this.props;
+
+        if (posts && posts.length > 0) {
+            return (
+                <Card.Group>
+                    {posts.filter(x => !x.deleted).map(item => (
+                        <Card key={item.id} fluid>
+                            <Card.Content>
+                                <Card.Header>
+                                    <Link to={`/posts/details/${item.id}`}>{item.title}</Link>
+                                </Card.Header>
+                                <Card.Meta>
+                                    by {item.author},{" "}
+                                    {moment(item.timestamp).format("YYYY-MM-DD HH:mm")}
+                                </Card.Meta>
+                            </Card.Content>
+                            <Card.Content extra>
+                                <Card.Meta>
+                                    <VoteButtons
+                                        voteScore={item.voteScore}
+                                        postId={item.id}
+                                        onUpvote={() => this.handleUpvote(item.id)}
+                                        onDownvote={() => this.handleDownvote(item.id)}
+                                    />
+                                    <div className="right floated">
+                                        <AdminButtons
+                                            onEdit={() => this.handleEdit(item.id)}
+                                            onDelete={() => this.handleDelete(item.id)}
+                                        />
+                                    </div>
+                                </Card.Meta>
+                            </Card.Content>
+                        </Card>
+                    ))}
+                </Card.Group>
+            );
+        } else {
+            return (
+                <Message negative>
+                    <Message.Header>We&#x27;re sorry but no posts were found.</Message.Header>
+                    <p>Please try a different category</p>
+                </Message>
+            );
+        }
+    }
+
+    _renderCategories() {
+        const { currentCategory } = this.state;
+        const { categories } = this.props;
+
+        return (
+            <div className="column">
+                <Button.Group>
+                    {categories &&
+                        categories.map(cat => (
+                            <Button
+                                key={cat.name}
+                                className={
+                                    cat.name === currentCategory
+                                        ? "ui button disabled"
+                                        : "ui button"
+                                }
+                                onClick={this._categoryChanged}
+                            >
+                                {cat.name}
+                            </Button>
+                        ))}
+                    <Button
+                        className={"All" === currentCategory ? "ui button disabled" : "ui button"}
+                        onClick={this._categoryChanged}
+                    >
+                        All
+                    </Button>
+                </Button.Group>
             </div>
-          </div>
-        </div>
-        {this._renderPosts()}
-      </div>
-    );
-  }
+        );
+    }
+
+    render() {
+        if (this.props.hasErrored) {
+            return <p>Sorry! There was an error</p>;
+        }
+        if (this.props.isLoading) {
+            return <p>Loading...</p>;
+        }
+
+        return (
+            <div>
+                <div className="ui equal width grid">
+                    <SortFilters
+                        filter={this.state.sortFilter}
+                        filterChanged={this._handlerSortFilterChanged}
+                    />
+                    {this._renderCategories()}
+                    <div className="column">
+                        <div>
+                            <Link to="/posts/add">
+                                <button className="ui icon right labeled right floated primary button">
+                                    Add New Post <i className="plus icon" />
+                                </button>
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+                {this._renderPosts()}
+            </div>
+        );
+    }
 }
 
 const mapStateToProps = ({ posts, categories, common }) => {
-  let errorsFound = false;
-  if (common && common.errors && common.errors["posts"]) {
-    errorsFound = true;
-  }
+    let errorsFound = false;
+    if (common && common.errors && common.errors["posts"]) {
+        errorsFound = true;
+    }
 
-  let isLoading = false;
-  if (common && common.loading["posts"]) {
-    isLoading = true;
-  }
+    let isLoading = false;
+    if (common && common.loading["posts"]) {
+        isLoading = true;
+    }
 
-  return {
-    posts: posts.items,
-    hasErrored: errorsFound,
-    isLoading: isLoading,
-    categories: categories.items
-  };
+    return {
+        posts: posts.items,
+        hasErrored: errorsFound,
+        isLoading: isLoading,
+        categories: categories.items
+    };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchPosts: () => dispatch(fetchPosts()),
-    fetchPostsByCategory: category => dispatch(fetchPostsByCategory(category)),
-    vote: (postId, voteChoice) => dispatch(voteOnPost(postId, voteChoice)),
-    sortPosts: filter => dispatch(sortPosts(filter)),
-    deletePost: postId => dispatch(deletePost(postId))
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(PostsContainer);
+export default connect(mapStateToProps, {
+    fetchPosts,
+    fetchPostsByCategory,
+    voteOnPost,
+    sortPosts,
+    deletePost
+})(PostsContainer);
