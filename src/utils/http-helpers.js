@@ -14,7 +14,7 @@ export class FetchService {
         dispatch(fetchErrored(action, false));
         dispatch(fetchLoading(action, true));
 
-        (async () => {
+        return (async () => {
             const response = await fetch(`${BaseApiUrl}${url}`, {
                 headers: baseFetchHeaders
             });
@@ -23,8 +23,9 @@ export class FetchService {
                 dispatch(fetchErrored(action));
             } else {
                 dispatch(fetchLoading(action, false));
-                const items = await response.json();
-                dispatch(successFunc(items));
+                const data = await response.json();
+                dispatch(successFunc(data));
+                return data;
             }
         })();
     }
@@ -33,7 +34,7 @@ export class FetchService {
         dispatch(fetchErrored(action, false));
         dispatch(fetchLoading(action, true));
 
-        (async () => {
+        return (async () => {
             const response = await fetch(`${BaseApiUrl}${url}`, {
                 headers: baseFetchHeaders,
                 method: "DELETE"
@@ -53,7 +54,7 @@ export class FetchService {
         dispatch(fetchErrored(action, false));
         dispatch(fetchLoading(action, true));
 
-        (async () => {
+        return (async () => {
             const response = await fetch(`${BaseApiUrl}${url}`, {
                 headers: baseFetchHeaders,
                 method: "POST",
@@ -68,6 +69,31 @@ export class FetchService {
                 if (successFunc) {
                     dispatch(successFunc);
                 }
+                return response.json();
+            }
+        })();
+    }
+
+    put(action, url, entityType, body, dispatch, successFunc) {
+        dispatch(fetchErrored(action, false));
+        dispatch(fetchLoading(action, true));
+
+        return (async () => {
+            const response = await fetch(`${BaseApiUrl}${url}`, {
+                headers: baseFetchHeaders,
+                method: "PUT",
+                body: body
+            });
+
+            if (!response.ok) {
+                dispatch(fetchErrored(action));
+            } else {
+                toastr.info(`${action} was successfully completed.`);
+                dispatch(fetchLoading(action, false));
+                if (successFunc) {
+                    dispatch(successFunc);
+                }
+                return response;
             }
         })();
     }

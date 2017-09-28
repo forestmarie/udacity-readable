@@ -1,7 +1,4 @@
-import toastr from "toastr";
-import { baseFetchHeaders, BaseApiUrl } from "../../utils/http-helpers";
 import { fetchService } from "../../utils/http-helpers";
-import { fetchErrored, fetchLoading } from "../common/CommonActions";
 
 export const ADD_POST = "ADD_POST";
 export const VOTE_ON_POST = "VOTE_ON_POST";
@@ -51,19 +48,14 @@ export function editPost({ id, title, body }) {
     };
 
     return dispatch => {
-        return fetch(`${BaseApiUrl}/posts/${id}`, {
-            headers: baseFetchHeaders,
-            method: "PUT",
-            body: JSON.stringify(editPostRequest)
-        })
-            .then(response => {
-                toastr.info("Post was successfully updated");
-                dispatch(editPostSuccessful(editPostRequest));
-                return response;
-            })
-            .catch(error => {
-                alert(error);
-            });
+        return fetchService.put(
+            EDIT_POST,
+            `/posts/${id}`,
+            "Post",
+            JSON.stringify(editPostRequest),
+            dispatch,
+            editPostSuccessful({ ...editPostRequest, id: id })
+        );
     };
 }
 

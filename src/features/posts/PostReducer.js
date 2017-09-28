@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 import {
     ADD_POST,
     EDIT_POST,
@@ -19,14 +21,15 @@ const posts = (state = postsInitialState, action) => {
     switch (action.type) {
         case ADD_POST:
             return {
-                ...state,
                 items: [...items, action.post]
             };
 
         case EDIT_POST:
+            const post = items.find(x => x.id === action.post.id);
+            const updatedPost = { ...post, title: action.post.title, body: action.post.body };
+
             return {
-                ...state,
-                currentPost: { ...state.currentPost, title: action.title, body: action.body }
+                items: [items.filter(x => x.id !== action.post.id), updatedPost]
             };
 
         case VOTE_ON_POST:
@@ -65,14 +68,7 @@ const posts = (state = postsInitialState, action) => {
             const sortKey = action.filter;
 
             return {
-                items: currentPosts.sort((a, b) => {
-                    if (a[sortKey] < b[sortKey]) {
-                        return 1;
-                    } else if (a[sortKey] > b[sortKey]) {
-                        return -1;
-                    }
-                    return 0;
-                })
+                items: _.orderBy(currentPosts, [sortKey], ["desc"])
             };
 
         default:

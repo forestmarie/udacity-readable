@@ -1,30 +1,22 @@
-import { baseFetchHeaders, BaseApiUrl } from "../../utils/http-helpers";
-import { fetchErrored, fetchLoading } from "../common/CommonActions";
+import { fetchService } from "../../utils/http-helpers";
 
 export const FETCH_CATEGORIES = "FETCH_CATEGORIES";
 
-export function fetchCategoriesSuccessful(categories) {
+export function fetchCategoriesSuccessful(response) {
     return {
         type: FETCH_CATEGORIES,
-        items: categories
+        items: response.categories
     };
 }
 
 export function fetchCategories() {
     return dispatch => {
-        dispatch(fetchLoading(FETCH_CATEGORIES, true));
-
-        return fetch(`${BaseApiUrl}/categories`, { headers: baseFetchHeaders })
-            .then(response => {
-                dispatch(fetchLoading(FETCH_CATEGORIES, false));
-                return response;
-            })
-            .then(response => response.json())
-            .then(response => {
-                dispatch(fetchCategoriesSuccessful(response.categories));
-            })
-            .catch(error => {
-                dispatch(fetchErrored(FETCH_CATEGORIES));
-            });
+        return fetchService.get(
+            FETCH_CATEGORIES,
+            "/categories",
+            "Category",
+            fetchCategoriesSuccessful,
+            dispatch
+        );
     };
 }
