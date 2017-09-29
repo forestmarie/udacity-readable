@@ -103,7 +103,8 @@ export function deleteComment(commentId) {
   };
 }
 
-export function fetchSuccessful(comments) {
+export function fetchCommentsSuccessful(comments) {
+  console.dir(comments);
   return {
     type: FETCH_COMMENTS,
     comments
@@ -116,7 +117,7 @@ export function fetchComments(postId) {
       FETCH_COMMENTS,
       `/posts/${postId}/comments`,
       "Comment",
-      fetchSuccessful,
+      fetchCommentsSuccessful,
       dispatch
     );
   };

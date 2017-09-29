@@ -1,25 +1,33 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { Menu } from "semantic-ui-react";
 
-const Navbar = ({ onMenuChanged, activeItem }) => {
-  const menuChanged = e => {
-    onMenuChanged(e.target.innerText.toLowerCase());
+class Navbar extends Component {
+  state = {
+    activeItem: "posts"
   };
 
-  return (
-    <Menu style={{ borderRadius: 0 }} inverted>
-      <Menu.Item header>Extreme Coding Daily</Menu.Item>
+  handleMenuChange = menuItem => {
+    this.setState({ activeItem: menuItem });
+  };
 
-      <Menu.Item name="posts" active={activeItem === "posts"} onClick={menuChanged} />
-      <Menu.Item name="help" active={activeItem === "help"} onClick={menuChanged} />
-    </Menu>
-  );
-};
+  render() {
+    const { activeItem } = this.state;
 
-Navbar.propTypes = {
-  activeItem: PropTypes.string.isRequired,
-  onMenuChanged: PropTypes.func.isRequired
-};
+    return (
+      <Menu style={{ borderRadius: 0 }} inverted>
+        <Menu.Item header>Extreme Coding Daily</Menu.Item>
+
+        <Menu.Item name="posts" onClick={this.handleMenuChange} active={activeItem === "addPost"}>
+          <Link to="/posts">Posts</Link>
+        </Menu.Item>
+
+        <Menu.Item name="addPost" onClick={this.handleMenuChange} active={activeItem === "addPost"}>
+          <Link to="/posts/add">Add Post</Link>
+        </Menu.Item>
+      </Menu>
+    );
+  }
+}
 
 export default Navbar;

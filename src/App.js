@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import Post from "./features/posts/Post";
@@ -7,6 +7,7 @@ import PostsContainer from "./features/posts/PostsContainer";
 import AddPost from "./features/posts/AddPost";
 import EditPost from "./features/posts/EditPost";
 import Navbar from "./features/layout/Navbar";
+import Footer from "./features/layout/Footer";
 import { fetchCategories } from "./features/categories/CategoryActions";
 import "./App.css";
 
@@ -19,17 +20,10 @@ class App extends Component {
     this.props.fetchCategories();
   }
 
-  handleMenuChange = menuItem => {
-    if (menuItem === "posts") {
-      this.props.history.push("/posts");
-    }
-    this.setState({ activeItem: menuItem });
-  };
-
   render() {
     return (
       <div>
-        <Navbar activeItem="posts" onMenuChanged={this.handleMenuChange} />
+        <Navbar />
         <div className="App-container">
           <Route exact path="/posts" component={PostsContainer} />
           <Switch>
@@ -40,6 +34,7 @@ class App extends Component {
           <Route exact path="/posts/details/:id" component={Post} />
           <Route exact path="/404" component={Error404} />
         </div>
+        <Footer />
       </div>
     );
   }

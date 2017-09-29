@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Card, Message, Button } from "semantic-ui-react";
+import { Card, Message, Button, Icon } from "semantic-ui-react";
 import moment from "moment";
 import { fetchPosts, fetchPostsByCategory, sortPosts, deletePost, voteOnPost } from "./PostActions";
 import SortFilters from "../common/SortFilters";
@@ -88,7 +88,8 @@ class PostsContainer extends Component {
                   <Link to={`/posts/details/${item.id}`}>{item.title}</Link>
                 </Card.Header>
                 <Card.Meta>
-                  by {item.author}, {moment(item.timestamp).format("YYYY-MM-DD HH:mm")}
+                  Posted by <Icon name="user" />
+                  {item.author} at {moment(item.timestamp).format("MMMM DD YYYY hh:mm A")}
                 </Card.Meta>
               </Card.Content>
               <Card.Content extra>

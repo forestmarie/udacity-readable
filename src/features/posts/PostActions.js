@@ -1,4 +1,5 @@
 import { fetchService } from "../../utils/http-helpers";
+import { FETCH_COMMENTS, fetchCommentsSuccessful } from "../comments/CommentActions";
 
 export const ADD_POST = "ADD_POST";
 export const VOTE_ON_POST = "VOTE_ON_POST";
@@ -81,13 +82,6 @@ export function voteOnPost(postId, vote) {
   };
 }
 
-export function fetchPostsSuccessful(posts) {
-  return {
-    type: FETCH_POSTS,
-    items: posts
-  };
-}
-
 export function fetchPostDetailsSuccessful(post) {
   return {
     type: FETCH_POST_DETAILS,
@@ -107,9 +101,28 @@ export function fetchPostDetails(id) {
   };
 }
 
+export function fetchPostsSuccessful(posts) {
+  return {
+    type: FETCH_POSTS,
+    items: posts
+  };
+}
+
 export function fetchPosts() {
   return dispatch => {
-    return fetchService.get(FETCH_POSTS, "/posts", "Post", fetchPostsSuccessful, dispatch);
+    return fetchService
+      .get(FETCH_POSTS, "/posts", "Post", fetchPostsSuccessful, dispatch)
+      .then(posts => {
+        for (const post in posts) {
+          fetchService.get(
+            FETCH_COMMENTS,
+            `/posts/${post.id}/comments`,
+            "Comment",
+            fetchCommentsSuccessful,
+            dispatch
+          );
+        }
+      });
   };
 }
 
