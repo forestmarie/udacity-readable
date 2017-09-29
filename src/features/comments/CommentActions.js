@@ -39,11 +39,9 @@ export function editSuccessful(commentId, timestamp, body) {
   };
 }
 
-export function editComment(commentId, body) {
-  const now = Date.now();
-
+export function editComment(commentId, body, timestamp) {
   const request = {
-    timestamp: now,
+    timestamp: timestamp,
     body: body
   };
 
@@ -54,7 +52,7 @@ export function editComment(commentId, body) {
       "Comment",
       JSON.stringify(request),
       dispatch,
-      editSuccessful(commentId, now, body)
+      editSuccessful(commentId, timestamp, body)
     );
   };
 }
@@ -104,7 +102,6 @@ export function deleteComment(commentId) {
 }
 
 export function fetchCommentsSuccessful(comments) {
-  console.dir(comments);
   return {
     type: FETCH_COMMENTS,
     comments

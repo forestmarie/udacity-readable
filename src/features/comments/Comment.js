@@ -28,9 +28,11 @@ class Comment extends Component {
   }
 
   _saveComment = () => {
-    this.props.editComment(this.props.id, this.state.commentBody).then(_ => {
-      this.setState({ editMode: false });
-    });
+    this.props
+      .editComment(this.props.id, this.state.commentBody, this.props.commentDate)
+      .then(_ => {
+        this.setState({ editMode: false });
+      });
   };
 
   _commentChanged = event => {
