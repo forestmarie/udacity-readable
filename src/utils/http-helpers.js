@@ -20,7 +20,7 @@ export class FetchService {
       });
 
       if (!response.ok) {
-        dispatch(fetchErrored(action));
+        dispatch(fetchErrored(action, true));
       } else {
         dispatch(fetchLoading(action, false));
         const data = await response.json();
@@ -41,7 +41,7 @@ export class FetchService {
       });
 
       if (!response.ok) {
-        dispatch(fetchErrored(action));
+        dispatch(fetchErrored(action, true));
       } else {
         toastr.info(`The ${entityType} was successfully deleted.`);
         dispatch(fetchLoading(action, false));
@@ -62,7 +62,7 @@ export class FetchService {
       });
 
       if (!response.ok) {
-        dispatch(fetchErrored(action));
+        dispatch(fetchErrored(action, true));
       } else {
         toastr.info(`${action} was successfully completed.`);
         dispatch(fetchLoading(action, false));
@@ -86,7 +86,7 @@ export class FetchService {
       });
 
       if (!response.ok) {
-        dispatch(fetchErrored(action));
+        dispatch(fetchErrored(action, true));
       } else {
         toastr.info(`${action} was successfully completed.`);
         dispatch(fetchLoading(action, false));
