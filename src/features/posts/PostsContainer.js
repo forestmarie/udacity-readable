@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Card, Message, Button, Icon } from "semantic-ui-react";
+import { Card, Message, Button, Icon, Label } from "semantic-ui-react";
 import moment from "moment";
 import { fetchPosts, fetchPostsByCategory, sortPosts, deletePost, voteOnPost } from "./PostActions";
 import SortFilters from "../common/SortFilters";
@@ -86,6 +86,8 @@ class PostsContainer extends Component {
               <Card.Content>
                 <Card.Header>
                   <Link to={`/posts/details/${item.id}`}>{item.title}</Link>
+                  {"  "}
+                  <Label pointing="left">{item.category}</Label>
                 </Card.Header>
                 <Card.Meta>
                   Posted by <Icon name="user" />
