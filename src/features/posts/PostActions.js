@@ -10,150 +10,150 @@ export const DELETE_POST = "DELETE_POST";
 export const SORT_POSTS = "SORT_POSTS";
 
 export function addPostSuccessful(post) {
-    return {
-        type: ADD_POST,
-        post: { ...post, voteScore: 1 }
-    };
+  return {
+    type: ADD_POST,
+    post: { ...post, voteScore: 1 }
+  };
 }
 
 export function addPost(post) {
-    const addPostRequest = {
-        ...post,
-        timestamp: Date.now()
-    };
+  const addPostRequest = {
+    ...post,
+    timestamp: Date.now()
+  };
 
-    return dispatch => {
-        return fetchService.post(
-            ADD_POST,
-            "/posts",
-            "Post",
-            JSON.stringify(addPostRequest),
-            dispatch,
-            addPostSuccessful(addPostRequest)
-        );
-    };
+  return dispatch => {
+    return fetchService.post(
+      ADD_POST,
+      "/posts",
+      "Post",
+      JSON.stringify(addPostRequest),
+      dispatch,
+      addPostSuccessful(addPostRequest)
+    );
+  };
 }
 
 export function editPostSuccessful(post) {
-    return {
-        type: EDIT_POST,
-        post: post
-    };
+  return {
+    type: EDIT_POST,
+    post: post
+  };
 }
 
 export function editPost({ id, title, body }) {
-    const editPostRequest = {
-        title: title,
-        body: body
-    };
+  const editPostRequest = {
+    title: title,
+    body: body
+  };
 
-    return dispatch => {
-        return fetchService.put(
-            EDIT_POST,
-            `/posts/${id}`,
-            "Post",
-            JSON.stringify(editPostRequest),
-            dispatch,
-            editPostSuccessful({ ...editPostRequest, id: id })
-        );
-    };
+  return dispatch => {
+    return fetchService.put(
+      EDIT_POST,
+      `/posts/${id}`,
+      "Post",
+      JSON.stringify(editPostRequest),
+      dispatch,
+      editPostSuccessful({ ...editPostRequest, id: id })
+    );
+  };
 }
 
 export function voteOnPostSuccessful(postId, vote) {
-    const voteScore = vote === "upVote" ? 1 : -1;
-    return {
-        type: VOTE_ON_POST,
-        voteScore,
-        postId: postId
-    };
+  const voteScore = vote === "upVote" ? 1 : -1;
+  return {
+    type: VOTE_ON_POST,
+    voteScore,
+    postId: postId
+  };
 }
 
 export function voteOnPost(postId, vote) {
-    return dispatch => {
-        return fetchService.post(
-            VOTE_ON_POST,
-            `/posts/${postId}`,
-            "Post",
-            JSON.stringify({ option: vote }),
-            dispatch,
-            voteOnPostSuccessful(postId, vote)
-        );
-    };
+  return dispatch => {
+    return fetchService.post(
+      VOTE_ON_POST,
+      `/posts/${postId}`,
+      "Post",
+      JSON.stringify({ option: vote }),
+      dispatch,
+      voteOnPostSuccessful(postId, vote)
+    );
+  };
 }
 
 export function fetchPostsSuccessful(posts) {
-    return {
-        type: FETCH_POSTS,
-        items: posts
-    };
+  return {
+    type: FETCH_POSTS,
+    items: posts
+  };
 }
 
 export function fetchPostDetailsSuccessful(post) {
-    return {
-        type: FETCH_POST_DETAILS,
-        post
-    };
+  return {
+    type: FETCH_POST_DETAILS,
+    post
+  };
 }
 
 export function fetchPostDetails(id) {
-    return dispatch => {
-        return fetchService.get(
-            FETCH_POST_DETAILS,
-            `/posts/${id}`,
-            "Post",
-            fetchPostDetailsSuccessful,
-            dispatch
-        );
-    };
+  return dispatch => {
+    return fetchService.get(
+      FETCH_POST_DETAILS,
+      `/posts/${id}`,
+      "Post",
+      fetchPostDetailsSuccessful,
+      dispatch
+    );
+  };
 }
 
 export function fetchPosts() {
-    return dispatch => {
-        return fetchService.get(FETCH_POSTS, "/posts", "Post", fetchPostsSuccessful, dispatch);
-    };
+  return dispatch => {
+    return fetchService.get(FETCH_POSTS, "/posts", "Post", fetchPostsSuccessful, dispatch);
+  };
 }
 
 export function deletePostSuccessful(postId) {
-    return {
-        type: DELETE_POST,
-        postId
-    };
+  return {
+    type: DELETE_POST,
+    postId
+  };
 }
 
 export function deletePost(postId) {
-    return dispatch => {
-        return fetchService.delete(
-            DELETE_POST,
-            `/posts/${postId}`,
-            "Post",
-            deletePostSuccessful(postId),
-            dispatch
-        );
-    };
+  return dispatch => {
+    return fetchService.delete(
+      DELETE_POST,
+      `/posts/${postId}`,
+      "Post",
+      deletePostSuccessful(postId),
+      dispatch
+    );
+  };
 }
 
 export function sortPosts(filter) {
-    return {
-        type: SORT_POSTS,
-        filter
-    };
+  return {
+    type: SORT_POSTS,
+    filter
+  };
 }
 
 export function fetchPostsByCategorySuccessful(posts) {
-    return {
-        type: FETCH_POSTS_BY_CATEGORY,
-        items: posts
-    };
+  return {
+    type: FETCH_POSTS_BY_CATEGORY,
+    items: posts
+  };
 }
 
 export function fetchPostsByCategory(category) {
-    return dispatch => {
-        return fetchService.get(
-            FETCH_POSTS_BY_CATEGORY,
-            `/${category}/posts`,
-            "Post",
-            fetchPostsByCategorySuccessful,
-            dispatch
-        );
-    };
+  return dispatch => {
+    return fetchService.get(
+      FETCH_POSTS_BY_CATEGORY,
+      `/${category}/posts`,
+      "Post",
+      fetchPostsByCategorySuccessful,
+      dispatch
+    );
+  };
 }
