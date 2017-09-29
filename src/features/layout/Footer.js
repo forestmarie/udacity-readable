@@ -11,17 +11,29 @@ const Footer = () => {
               <Header inverted as="h4" content="Connect" />
               <List link inverted>
                 <List.Item>
-                  <a href="https://www.facebook.com/forest.marie" target="_blank">
+                  <a
+                    href="https://www.facebook.com/forest.marie"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
                     <Icon name="facebook" />
                   </a>
                 </List.Item>
                 <List.Item>
-                  <a href="https://www.linkedin.com/in/forestmarie/" target="_blank">
+                  <a
+                    href="https://www.linkedin.com/in/forestmarie/"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
                     <Icon name="linkedin" />
                   </a>
                 </List.Item>
                 <List.Item>
-                  <a href="https://github.com/forestmarie" target="_blank">
+                  <a
+                    href="https://github.com/forestmarie"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
                     <Icon name="github" />
                   </a>
                 </List.Item>

@@ -97,8 +97,8 @@ export function deleteComment(commentId) {
       FETCH_COMMENTS,
       `/comments/${commentId}`,
       "Comment",
-      deleteSuccessful(commentId),
-      dispatch
+      dispatch,
+      deleteSuccessful(commentId)
     );
   };
 }
@@ -117,8 +117,8 @@ export function fetchComments(postId) {
       FETCH_COMMENTS,
       `/posts/${postId}/comments`,
       "Comment",
-      fetchCommentsSuccessful,
-      dispatch
+      dispatch,
+      fetchCommentsSuccessful
     );
   };
 }

@@ -15,8 +15,8 @@ export function fetchCategories() {
       FETCH_CATEGORIES,
       "/categories",
       "Category",
-      fetchCategoriesSuccessful,
-      dispatch
+      dispatch,
+      fetchCategoriesSuccessful
     );
   };
 }

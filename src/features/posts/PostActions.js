@@ -1,5 +1,5 @@
 import { fetchService } from "../../utils/http-helpers";
-import { FETCH_COMMENTS, fetchCommentsSuccessful } from "../comments/CommentActions";
+import { FETCH_COMMENTS } from "../comments/CommentActions";
 
 export const ADD_POST = "ADD_POST";
 export const VOTE_ON_POST = "VOTE_ON_POST";
@@ -9,6 +9,7 @@ export const FETCH_POST_DETAILS = "FETCH_POST_DETAILS";
 export const FETCH_POSTS_BY_CATEGORY = "FETCH_POSTS_BY_CATEGORY";
 export const DELETE_POST = "DELETE_POST";
 export const SORT_POSTS = "SORT_POSTS";
+export const SET_COMMENTS_COUNT = "SET_COMMENTS_COUNT";
 
 export function addPostSuccessful(post) {
   return {
@@ -91,13 +92,15 @@ export function fetchPostDetailsSuccessful(post) {
 
 export function fetchPostDetails(id) {
   return dispatch => {
-    return fetchService.get(
-      FETCH_POST_DETAILS,
-      `/posts/${id}`,
-      "Post",
-      fetchPostDetailsSuccessful,
-      dispatch
-    );
+    return fetchService
+      .get(FETCH_POST_DETAILS, `/posts/${id}`, "Post", dispatch, fetchPostDetailsSuccessful)
+      .then(post => {
+        fetchService
+          .get(FETCH_COMMENTS, `/posts/${post.id}/comments`, "Comment", dispatch)
+          .then(comments => {
+            dispatch(setCommentsCount(post.id, comments.length));
+          });
+      });
   };
 }
 
@@ -108,19 +111,25 @@ export function fetchPostsSuccessful(posts) {
   };
 }
 
+export function setCommentsCount(postId, commentsCount) {
+  return {
+    type: SET_COMMENTS_COUNT,
+    postId,
+    commentsCount
+  };
+}
+
 export function fetchPosts() {
   return dispatch => {
     return fetchService
-      .get(FETCH_POSTS, "/posts", "Post", fetchPostsSuccessful, dispatch)
+      .get(FETCH_POSTS, "/posts", "Post", dispatch, fetchPostsSuccessful)
       .then(posts => {
-        for (const post in posts) {
-          fetchService.get(
-            FETCH_COMMENTS,
-            `/posts/${post.id}/comments`,
-            "Comment",
-            fetchCommentsSuccessful,
-            dispatch
-          );
+        for (let post of posts) {
+          fetchService
+            .get(FETCH_COMMENTS, `/posts/${post.id}/comments`, "Comment", dispatch)
+            .then(comments => {
+              dispatch(setCommentsCount(post.id, comments.length));
+            });
         }
       });
   };
@@ -139,8 +148,8 @@ export function deletePost(postId) {
       DELETE_POST,
       `/posts/${postId}`,
       "Post",
-      deletePostSuccessful(postId),
-      dispatch
+      dispatch,
+      deletePostSuccessful(postId)
     );
   };
 }
@@ -161,12 +170,22 @@ export function fetchPostsByCategorySuccessful(posts) {
 
 export function fetchPostsByCategory(category) {
   return dispatch => {
-    return fetchService.get(
-      FETCH_POSTS_BY_CATEGORY,
-      `/${category}/posts`,
-      "Post",
-      fetchPostsByCategorySuccessful,
-      dispatch
-    );
+    return fetchService
+      .get(
+        FETCH_POSTS_BY_CATEGORY,
+        `/${category}/posts`,
+        "Post",
+        dispatch,
+        fetchPostsByCategorySuccessful
+      )
+      .then(posts => {
+        for (let post of posts) {
+          fetchService
+            .get(FETCH_COMMENTS, `/posts/${post.id}/comments`, "Comment", dispatch)
+            .then(comments => {
+              dispatch(setCommentsCount(post.id, comments.length));
+            });
+        }
+      });
   };
 }

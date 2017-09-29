@@ -89,7 +89,9 @@ class PostsContainer extends Component {
                 </Card.Header>
                 <Card.Meta>
                   Posted by <Icon name="user" />
-                  {item.author} at {moment(item.timestamp).format("MMMM DD YYYY hh:mm A")}
+                  {item.author} at {moment(item.timestamp).format("MMMM DD YYYY hh:mm A")}{" "}
+                  <Icon name="talk" />
+                  {item.commentsCount}
                 </Card.Meta>
               </Card.Content>
               <Card.Content extra>

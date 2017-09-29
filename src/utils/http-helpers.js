@@ -10,7 +10,7 @@ export const baseFetchHeaders = {
 export const BaseApiUrl = "http://localhost:3001";
 
 export class FetchService {
-  get(action, url, entityType, successFunc, dispatch) {
+  get(action, url, entityType, dispatch, successFunc) {
     dispatch(fetchErrored(action, false));
     dispatch(fetchLoading(action, true));
 
@@ -24,13 +24,15 @@ export class FetchService {
       } else {
         dispatch(fetchLoading(action, false));
         const data = await response.json();
-        dispatch(successFunc(data));
+        if (successFunc) {
+          dispatch(successFunc(data));
+        }
         return data;
       }
     })();
   }
 
-  delete(action, url, entityType, successFunc, dispatch) {
+  delete(action, url, entityType, dispatch, successFunc) {
     dispatch(fetchErrored(action, false));
     dispatch(fetchLoading(action, true));
 
@@ -45,7 +47,9 @@ export class FetchService {
       } else {
         toastr.info(`The ${entityType} was successfully deleted.`);
         dispatch(fetchLoading(action, false));
-        dispatch(successFunc);
+        if (successFunc) {
+          dispatch(successFunc);
+        }
       }
     })();
   }

@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import { Button, Icon, Container, Header, Segment, Sidebar, Menu, Image } from "semantic-ui-react";
+import { Button, Icon, Container, Header, Segment, Sidebar, Menu } from "semantic-ui-react";
 import moment from "moment";
 import { fetchPostDetails, voteOnPost, deletePost, FETCH_POST_DETAILS } from "./PostActions";
 import CommentsContainer from "../comments/CommentsContainer";
 import VoteButtons from "../common/VoteButtons";
-import AdminButtons from "../common/AdminButtons";
 
 class Post extends Component {
   state = {
@@ -90,10 +89,10 @@ class Post extends Component {
                 <Container text style={{ marginTop: "2em" }}>
                   <Header as="h1">{post.title}</Header>
                   Posted by <Icon name="user" />
-                  {post.author} at {moment(post.timestamp).format("MMMM DD YYYY hh:mm A")}{" "}
-                  <Icon name="talk" /> 301 comments
-                  <div className="ui section divider" />
+                  {post.author} at {moment(post.timestamp).format("MMMM DD YYYY hh:mm A")}
+                  <p />
                   <p>{post.body}</p>
+                  <div className="ui divider" />
                   <div>
                     <VoteButtons
                       voteScore={post.voteScore}
@@ -103,7 +102,7 @@ class Post extends Component {
                     &nbsp;
                     {!this.state.showComments && (
                       <button className="ui icon right labeled button" onClick={this.showComments}>
-                        View Comments <i className="comments icon" />
+                        View Comments {`(${post.commentsCount})`} <i className="comments icon" />
                       </button>
                     )}
                     <Button content="Toggle Admin Mode" onClick={this.toggleAdminMode} />

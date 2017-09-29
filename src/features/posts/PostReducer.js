@@ -8,7 +8,8 @@ import {
   FETCH_POSTS_BY_CATEGORY,
   DELETE_POST,
   VOTE_ON_POST,
-  SORT_POSTS
+  SORT_POSTS,
+  SET_COMMENTS_COUNT
 } from "./PostActions";
 
 const postsInitialState = {
@@ -69,6 +70,14 @@ const posts = (state = postsInitialState, action) => {
 
       return {
         items: _.orderBy(currentPosts, [sortKey], ["desc"])
+      };
+
+    case SET_COMMENTS_COUNT:
+      const postToUpdate = items.find(x => x.id === action.postId);
+      const postWithCommentCount = { ...postToUpdate, commentsCount: action.commentsCount };
+
+      return {
+        items: [...items.filter(x => x.id !== action.postId), postWithCommentCount]
       };
 
     default:
