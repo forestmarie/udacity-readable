@@ -18,6 +18,7 @@ const postsInitialState = {
 
 const posts = (state = postsInitialState, action) => {
   const { items } = state;
+  let index;
 
   switch (action.type) {
     case ADD_POST:
@@ -35,7 +36,7 @@ const posts = (state = postsInitialState, action) => {
 
     case VOTE_ON_POST:
       const currentPost = items.find(x => x.id === action.postId);
-      const index = items.findIndex(x => x.id === action.postId);
+      index = items.findIndex(x => x.id === action.postId);
       const newVoteScore = currentPost.voteScore + action.voteScore;
 
       const item = { ...currentPost, voteScore: newVoteScore };
@@ -74,10 +75,11 @@ const posts = (state = postsInitialState, action) => {
 
     case SET_COMMENTS_COUNT:
       const postToUpdate = items.find(x => x.id === action.postId);
-      const postWithCommentCount = { ...postToUpdate, commentsCount: action.commentsCount };
+      index = items.findIndex(x => x.id === action.postId);
+      const withComments = { ...postToUpdate, commentsCount: action.commentsCount };
 
       return {
-        items: [...items.filter(x => x.id !== action.postId), postWithCommentCount]
+        items: [...items.slice(0, index), withComments, ...items.slice(index + 1, items.length)]
       };
 
     default:

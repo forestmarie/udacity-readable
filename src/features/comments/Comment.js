@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Card, Button } from "semantic-ui-react";
+import { Card, Button, Icon } from "semantic-ui-react";
 import moment from "moment";
 import VoteButtons from "../common/VoteButtons";
 import { editComment } from "./CommentActions";
@@ -55,7 +55,8 @@ class Comment extends Component {
       <Card fluid>
         <Card.Content>
           <Card.Meta>
-            By {author}, {moment(commentDate).format("YYYY-MM-DD HH:mm")}
+            Posted by <Icon name="user" />
+            {author} on {moment(commentDate).format("MMMM-DD-YYYY HH:mm A")}
           </Card.Meta>
           {!editMode && <Card.Description>{commentBody}</Card.Description>}
           {this.state.editMode && this._renderEditMode()}
