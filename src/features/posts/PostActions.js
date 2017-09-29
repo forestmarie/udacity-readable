@@ -100,6 +100,8 @@ export function fetchPostDetails(id) {
           .then(comments => {
             dispatch(setCommentsCount(post.id, comments.length));
           });
+
+        return post;
       });
   };
 }
