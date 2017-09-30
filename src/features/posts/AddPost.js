@@ -38,17 +38,17 @@ class AddPost extends Component {
   render() {
     return (
       <form id="addForm" className="ui form" onSubmit={this.handleSubmit}>
-        <div className="field">
+        <div className="required field">
           <label>Title</label>
           <input type="text" placeholder="Title" ref={input => (this.title = input)} />
         </div>
 
-        <div className="field">
+        <div className="required field">
           <label>Author</label>
           <input type="text" placeholder="Author" ref={input => (this.author = input)} />
         </div>
 
-        <div className="field">
+        <div className="required field">
           <label>Category</label>
           <Dropdown
             compact
@@ -59,7 +59,7 @@ class AddPost extends Component {
           />
         </div>
 
-        <div className="field">
+        <div className="required field">
           <label>Post</label>
           <textarea
             placeholder="Body"

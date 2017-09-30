@@ -95,13 +95,16 @@ export function fetchPostDetails(id) {
     return fetchService
       .get(FETCH_POST_DETAILS, `/posts/${id}`, "Post", dispatch, fetchPostDetailsSuccessful)
       .then(post => {
-        fetchService
-          .get(FETCH_COMMENTS, `/posts/${post.id}/comments`, "Comment", dispatch)
-          .then(comments => {
-            dispatch(setCommentsCount(post.id, comments.length));
-          });
-
-        return post;
+        if (post) {
+          fetchService
+            .get(FETCH_COMMENTS, `/posts/${post.id}/comments`, "Comment", dispatch)
+            .then(comments => {
+              dispatch(setCommentsCount(post.id, comments.length));
+            });
+          return post;
+        } else {
+          throw new Error("Requested post does not exist.");
+        }
       });
   };
 }

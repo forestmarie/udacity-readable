@@ -10,12 +10,17 @@ class EditPost extends Component {
   };
 
   componentDidMount() {
-    this.props.fetchPostDetails(this.props.match.params.id).then(post => {
-      this.setState({
-        body: post.body,
-        title: post.title
+    this.props
+      .fetchPostDetails(this.props.match.params.id)
+      .then(post => {
+        this.setState({
+          body: post.body,
+          title: post.title
+        });
+      })
+      .catch(error => {
+        this.props.history.push("/404");
       });
-    });
   }
 
   handleSubmit = e => {
@@ -29,7 +34,7 @@ class EditPost extends Component {
     };
 
     this.props.editPost(post).then(_ => {
-      this.props.history.push(`/posts/details/${postId}`);
+      this.props.history.push(`/posts/${this.props.match.params.category}/${postId}`);
     });
   };
 

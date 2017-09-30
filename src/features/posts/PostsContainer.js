@@ -34,8 +34,8 @@ class PostsContainer extends Component {
     this.props.voteOnPost(postId, "downVote");
   };
 
-  handleEdit = postId => {
-    this.props.history.push(`/posts/${postId}/edit/`);
+  handleEdit = (postId, category) => {
+    this.props.history.push(`/posts/${category}/${postId}/edit/`);
   };
 
   handleDelete = postId => {
@@ -71,10 +71,6 @@ class PostsContainer extends Component {
     this.props.sortPosts(sortFilter);
   };
 
-  _viewDetails = postId => {
-    this.props.history.push(`/posts/details/${postId}`);
-  };
-
   _renderPosts() {
     const { posts } = this.props;
 
@@ -85,7 +81,7 @@ class PostsContainer extends Component {
             <Card key={item.id} fluid>
               <Card.Content>
                 <Card.Header>
-                  <Link to={`/posts/details/${item.id}`}>{item.title}</Link>
+                  <Link to={`/posts/${item.category}/${item.id}`}>{item.title}</Link>
                   {"  "}
                   <Label pointing="left">{item.category}</Label>
                 </Card.Header>
@@ -106,7 +102,7 @@ class PostsContainer extends Component {
                   />
                   <div className="right floated">
                     <AdminButtons
-                      onEdit={() => this.handleEdit(item.id)}
+                      onEdit={() => this.handleEdit(item.id, item.category)}
                       onDelete={() => this.handleDelete(item.id)}
                     />
                   </div>

@@ -18,12 +18,24 @@ class Navbar extends Component {
       <Menu style={{ borderRadius: 0 }} inverted>
         <Menu.Item header>Extreme Coding Daily</Menu.Item>
 
-        <Menu.Item name="posts" onClick={this.handleMenuChange} active={activeItem === "addPost"}>
-          <Link to="/posts">Posts</Link>
+        <Menu.Item
+          as={Link}
+          to="/posts"
+          name="posts"
+          onClick={this.handleMenuChange}
+          active={activeItem === "addPost"}
+        >
+          Posts
         </Menu.Item>
 
-        <Menu.Item name="addPost" onClick={this.handleMenuChange} active={activeItem === "addPost"}>
-          <Link to="/posts/add">Add Post</Link>
+        <Menu.Item
+          as={Link}
+          to="/posts/add"
+          name="addPost"
+          onClick={this.handleMenuChange}
+          active={activeItem === "addPost"}
+        >
+          Add Post
         </Menu.Item>
       </Menu>
     );

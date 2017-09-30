@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { Message } from "semantic-ui-react";
 import Post from "./features/posts/Post";
 import PostsContainer from "./features/posts/PostsContainer";
 import AddPost from "./features/posts/AddPost";
@@ -12,7 +13,12 @@ import { fetchCategories } from "./features/categories/CategoryActions";
 import "./App.css";
 
 const Error404 = () => {
-  return <div>The requested item does not exist</div>;
+  return (
+    <Message negative>
+      <Message.Header>We&#x27;re sorry but the requested resource does not exist.</Message.Header>
+      <p>It was either deleted or the id is wrong.</p>
+    </Message>
+  );
 };
 
 class App extends Component {
@@ -30,8 +36,8 @@ class App extends Component {
             <Route exact path="/posts/add" component={AddPost} />
             <Route exact path="/posts/:category" component={PostsContainer} />
           </Switch>
-          <Route exact path="/posts/:id/edit" component={EditPost} />
-          <Route exact path="/posts/details/:id" component={Post} />
+          <Route exact path="/posts/:category/:id/edit" component={EditPost} />
+          <Route exact path="/posts/:category/:id" component={Post} />
           <Route exact path="/404" component={Error404} />
         </div>
         <Footer />

@@ -16,7 +16,9 @@ class Post extends Component {
   };
 
   componentWillMount() {
-    this.props.fetchPostDetails(this.state.postId);
+    this.props.fetchPostDetails(this.state.postId).catch(error => {
+      this.props.history.push("/404");
+    });
   }
 
   toggleAdminMode = () => {
@@ -47,8 +49,8 @@ class Post extends Component {
     this.props.voteOnPost(this.state.postId, "downVote");
   };
 
-  handleEdit = () => {
-    this.props.history.push(`/posts/${this.state.postId}/edit/`);
+  handleEdit = (postId, category) => {
+    this.props.history.push(`/posts/${category}/${postId}/edit/`);
   };
 
   handleDelete = () => {
@@ -75,7 +77,7 @@ class Post extends Component {
               vertical
               inverted
             >
-              <Menu.Item onClick={this.handleEdit} name="edit">
+              <Menu.Item onClick={() => this.handleEdit(post.id, post.category)} name="edit">
                 <Icon name="edit" />
                 Edit
               </Menu.Item>
